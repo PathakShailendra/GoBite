@@ -1,5 +1,7 @@
 import userModel from '../models/user.model';
 import bcrypt from 'bcryptjs';
+import sendEmail from '../config/sendEmail.js';
+import verifyEmailTemplate from '../utils/verifyEmailTemplate.js';
 
 export async function registerUserController(req, res, next) {
     try {
@@ -27,7 +29,22 @@ export async function registerUserController(req, res, next) {
             email,
             password: hashedPassword
         });
-        await user.save();
+        const save = await user.save();
+        const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save._id}`
+        const verifyEmail = await sendEmail({
+            sendTo : email,
+            subject : 'Verify email from GoBite',
+            html: verifyEmailTemplate({
+                name,
+                url: verifyEmailUrl
+            })
+        })
+        return res.json({
+            message: 'User created successfully',
+            success: true,
+            error: false,
+            data : save
+        })
     }
     catch (error) {
         return res.status(500).json({
