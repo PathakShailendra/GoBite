@@ -12,12 +12,12 @@ const sendEmail = async ({ sendTo, subject, html }) => {
       subject: subject,
       html: html,
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    if (error) {
+      return console.log({ error });
+    }
   }
-  if (error) {
-    return console.error({ error });
-  }
+  
 };
 
 

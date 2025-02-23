@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import connectDB from "./config/db.js";
+import userRoutes from './routes/user.routes.js'
 
 dotenv.config();
 
@@ -28,6 +29,8 @@ app.use(
 app.get("/", (req, res) => {
   res.json({ message: "Hello World" });
 });
+
+app.use('/api/user', userRoutes)
 
 
 connectDB().then(() => {  

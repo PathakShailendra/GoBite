@@ -1,4 +1,4 @@
-import userModel from '../models/user.model';
+import userModel from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import sendEmail from '../config/sendEmail.js';
 import verifyEmailTemplate from '../utils/verifyEmailTemplate.js';
@@ -47,6 +47,7 @@ export async function registerUserController(req, res, next) {
         })
     }
     catch (error) {
+        console.log(error)
         return res.status(500).json({
             message: error.message || error,
             error: true,
