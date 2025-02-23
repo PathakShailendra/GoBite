@@ -4,6 +4,7 @@ import sendEmail from "../config/sendEmail.js";
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import generatedAccessToken from "../utils/genarateAccessToken.js";
 import genertedRefreshToken from "../utils/generaterefreshToken.js";
+import uploadImageCloudinary from "../utils/uploadImageCloudinary.js";
 
 export async function registerUserController(req, res, next) {
   try {
@@ -76,7 +77,7 @@ export async function verifyEmailController(req, res, next) {
       message: "Email verified successfully",
       success: true,
       error: false,
-    //   data: updateUser,
+      //   data: updateUser,
     });
   } catch (error) {
     return res.status(500).json({
@@ -92,14 +93,14 @@ export async function verifyEmailController(req, res, next) {
 export async function loginController(req, res, next) {
   try {
     const { email, password } = req.body;
-    if (!email ||!password) {
+    if (!email || !password) {
       return res.status(400).json({
         message: "All fields are required",
         error: true,
         success: false,
       });
     }
-    const user = await userModel.findOne({email});
+    const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(400).json({
         message: "Invalid email or password",
@@ -107,8 +108,8 @@ export async function loginController(req, res, next) {
         success: false,
       });
     }
-    
-    if(user.status !== "Active") {
+
+    if (user.status !== "Active") {
       return res.status(400).json({
         message: "Contact to admin",
         error: true,
@@ -128,15 +129,15 @@ export async function loginController(req, res, next) {
     const accessToken = await generatedAccessToken(user._id);
     const refreshToken = await genertedRefreshToken(user._id);
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none"
+      sameSite: "none",
     });
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none"
+      sameSite: "none",
     });
 
     return res.status(200).json({
@@ -145,10 +146,9 @@ export async function loginController(req, res, next) {
       error: false,
       data: {
         accessToken,
-        refreshToken
+        refreshToken,
       },
     });
-
   } catch (error) {
     return res.status(500).json({
       message: error.message || error,
@@ -159,28 +159,54 @@ export async function loginController(req, res, next) {
 }
 
 // logout controller
-
 export async function logoutController(req, res, next) {
   try {
-    const userId = req.userId
+    const userId = req.userId;
     const refreshToken = req.cookies.refreshToken;
-    res.clearCookie('accessToken', {
+    res.clearCookie("accessToken", {
       httpOnly: true,
       secure: true,
-      sameSite: "none"
+      sameSite: "none",
     });
-    res.clearCookie('refreshToken',{
+    res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
-      sameSite: "none"
+      sameSite: "none",
     });
     const removeRefreshToken = await userModel.findByIdAndUpdate(userId, {
-      refresh_token:""
-    })
+      refresh_token: "",
+    });
     return res.status(200).json({
       message: "Logout successfully",
       success: true,
       error: false,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+export async function uploadAvatar(req, res, next) {
+  try {
+    const userId = req.userId;
+    const image = req.file;
+    const upload = await uploadImageCloudinary(image);
+    const updateAvatar = await userModel.findByIdAndUpdate(userId, {
+      avatar: upload.url,
+    });
+
+    return res.status(200).json({
+      message: "Image uploaded successfully",
+      success: true,
+      error: false,
+      data : {
+        _id : userId,
+        avatar : upload.url
+    }
     });
   } catch (error) {
     return res.status(500).json({
