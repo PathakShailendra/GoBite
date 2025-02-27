@@ -5,6 +5,8 @@ import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import generatedAccessToken from "../utils/genarateAccessToken.js";
 import genertedRefreshToken from "../utils/generaterefreshToken.js";
 import uploadImageCloudinary from "../utils/uploadImageCloudinary.js";
+import generateOtp from "../utils/generateOtp.js";
+import forgotPasswordTemplate from "../utils/forgotPasswordTemplate.js";
 
 export async function registerUserController(req, res, next) {
   try {
@@ -203,10 +205,10 @@ export async function uploadAvatar(req, res, next) {
       message: "Image uploaded successfully",
       success: true,
       error: false,
-      data : {
-        _id : userId,
-        avatar : upload.url
-    }
+      data: {
+        _id: userId,
+        avatar: upload.url,
+      },
     });
   } catch (error) {
     return res.status(500).json({
@@ -216,3 +218,85 @@ export async function uploadAvatar(req, res, next) {
     });
   }
 }
+
+export async function updateUserDetails(req, res, next) {
+  try {
+    const userId = req.userId;
+    const { name, email, mobile, password } = req.body;
+    let hashedPassword = "";
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    }
+
+    const updateUser = await userModel.updateOne(
+      { _id: userId },
+      {
+        ...(name && { name: name }),
+        ...(email && { email: email }),
+        ...(mobile && { mobile: mobile }),
+        ...(password && { password: hashedPassword }),
+      }
+    );
+
+    return res.status(200).json({
+      message: "User updated successfully",
+      success: true,
+      error: false,
+      data: updateUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+// forget password controller
+
+export async function forgetPasswordController(req, res, next) {
+  try {
+    const { email } = req.body;
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        message: "Email not found",
+        error: true,
+        success: false,
+      });
+    }
+
+    const otp = generateOtp();
+    const expireTime = new Date() + 60 * 60 * 1000; //1hr
+
+    const update = await userModel.findByIdAndUpdate(user._id, {
+      forgot_password_otp: otp,
+      forgot_password_expiry: new Date(expireTime).toISOString(),
+    });
+
+    await sendEmail({
+      sendTo: email,
+      subject: "Forgot password from Gobite",
+      html: forgotPasswordTemplate({
+        name: user.name,
+        otp: otp,
+      }),
+    });
+
+    return res.status(200).json({
+      message: "OTP sent successfully check your email",
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+//verify forgot password otp
