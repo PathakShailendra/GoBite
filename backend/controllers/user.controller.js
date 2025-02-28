@@ -1,5 +1,6 @@
 import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import sendEmail from "../config/sendEmail.js";
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import generatedAccessToken from "../utils/genarateAccessToken.js";
@@ -391,7 +392,7 @@ export async function resetPassword(req, res, next) {
       });
     }
 
-    const salt = await bcrypt .genSalt(10);
+    const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(newPassword, salt);
 
     const update = await userModel.findOneAndUpdate(user._id, {
@@ -403,6 +404,62 @@ export async function resetPassword(req, res, next) {
       error: false,
       success: true,
     });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+// refresh token controller
+export async function refreshToken(req, res) {
+  try {
+    const refreshToken =
+      req.cookies.refreshToken || req?.header?.authorization?.split(" ")[1];
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "Please login first, Invalid token",
+        error: true,
+        success: false,
+      });
+    }
+
+    const verifyToken = await jwt.verify(
+      refreshToken,
+      process.env.SECRET_KEY_REFRESH_TOKEN
+    );
+
+    if (!verifyToken) {
+      return res.status(401).json({
+        message: "Token is expired",
+        error: true,
+        success: false,
+      });
+    }
+    const userId = verifyToken?._id;
+
+    const newAccessToken = await generatedAccessToken(userId);
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    return res.status(200).json({
+      message: "New access token generated",
+      success: true,
+      error: false,
+      data: {
+        accessToken: newAccessToken,
+      },
+    });
+
+
+
   } catch (error) {
     return res.status(500).json({
       message: error.message || error,
