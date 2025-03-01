@@ -1,11 +1,18 @@
-import React from 'react'
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
-    <main>
-      Vite App
-    </main>
-  )
-}
+    <>
+      <Header />
+      <main className="min-h-[80vh]">
+        <Outlet />
+      </main>
+      <Footer />
+    </>
+  );
+};
 
-export default App
+export default App;
