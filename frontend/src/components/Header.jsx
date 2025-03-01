@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/logo.png";
+import logo from "../assets/GO_BITE_LOGO.svg";
 import Search from "./Search";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -18,7 +18,7 @@ const Header = () => {
   }
 
   return (
-    <header className="h-24 lg:h-20 sticky lg:shadow-md top-0 flex justify-center flex-col gap-1">
+    <header className="h-24 lg:h-20 sticky lg:shadow-md top-0 flex justify-center flex-col gap-1 bg-white">
       {!(isSearchPage && isMobile) && (
         <div className="container mx-auto flex items-center px-2 justify-between">
           {/* logo */}
@@ -26,8 +26,8 @@ const Header = () => {
             <Link to={"/"} className="h-full flex items-center justify-center">
               <img
                 src={logo}
-                width={170}
-                height={60}
+                width={140}
+                height={50}
                 alt="logo"
                 className="hidden lg:block"
               />
