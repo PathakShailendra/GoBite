@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
+import toast from "react-hot-toast";
+import Axios from "../utils/Axios";
+import SummaryApi from "../common/SummaryApi";
+import AxiosToastError from "../utils/AxiosToastError";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+    const [showPasword, setshowPasword] = useState(false);
+    const [showConfirmPasssword, setshowConfirmPasssword] = useState(false);
+    const navigate = useNavigate();
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -22,12 +30,39 @@ const Register = () => {
 
   const validateValue = Object.values(data).every((value) => value);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if(data.password !== data.confirmPassword) {
+        toast.error("password and confirm password must be the same");
+        return;
+    }
+
+    try {
+        const response = await Axios({
+            ...SummaryApi.register,
+            data: data
+        })
+        if(response.data.error) {
+            toast.error(response.data.message);
+        }
+        if(response.data.success) {
+            toast.success(response.data.message);
+            setData({
+                name: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+            });
+            navigate("/login");
+        }
+        console.log(response);
+        
+    } catch (error) {
+        AxiosToastError(error);
+    }
+
   };
 
-  const [showPasword, setshowPasword] = useState(false);
-  const [showConfirmPasssword, setshowConfirmPasssword] = useState(false);
 
   return (
     <section className=" w-full container mx-auto px-2">
@@ -47,7 +82,7 @@ const Register = () => {
               value={data.name}
               onChange={handleChange}
               placeholder="Enter your name"
-              className="bg-blue-50 p-2 border rounded-md outline-none focus:border-[#ffbf00]"
+              className="bg-blue-50 p-2 border rounded-md outline-none focus:border-[#D69CAA]"
             />
           </div>
 
@@ -60,13 +95,13 @@ const Register = () => {
               value={data.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="bg-blue-50 p-2 border rounded-md outline-none focus:border-[#ffbf00]"
+              className="bg-blue-50 p-2 border rounded-md outline-none focus:border-[#D69CAA]"
             />
           </div>
 
           <div className="grid gap-1">
             <label htmlFor="password">Password:</label>
-            <div className="bg-blue-50 p-2 border rounded-md flex items-center focus-within:border-[#ffbf00]">
+            <div className="bg-blue-50 p-2 border rounded-md flex items-center focus-within:border-[#D69CAA]">
               <input
                 type={showPasword ? "text" : "password"}
                 id="password"
@@ -89,7 +124,7 @@ const Register = () => {
 
           <div className="grid gap-1">
             <label htmlFor="confirmPassword">Confirm Password:</label>
-            <div className="bg-blue-50 p-2 border rounded-md flex items-center focus-within:border-[#ffbf00]">
+            <div className="bg-blue-50 p-2 border rounded-md flex items-center focus-within:border-[#D69CAA]">
               <input
                 type={showConfirmPasssword ? "text" : "password"}
                 id="confirmPassword"
@@ -111,6 +146,7 @@ const Register = () => {
           </div>
 
           <button
+          disabled={!validateValue}
             className={`${
               validateValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500"
             }  my-3 font-semibold text-white p-2 rounded-md tracking-wide`}
@@ -118,6 +154,16 @@ const Register = () => {
             Register
           </button>
         </form>
+
+        <p className="text-center">
+        Already have an account?{" "}
+                  <Link
+                    className="font-semibold text-[#67AB95] hover:text-[#D69CAA] hover:underline transition-all duration-300"
+                    to="/login"
+                  >
+                    Login
+                  </Link>
+                </p>
       </div>
     </section>
   );

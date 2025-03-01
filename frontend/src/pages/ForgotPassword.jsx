@@ -7,12 +7,10 @@ import SummaryApi from "../common/SummaryApi";
 import AxiosToastError from "../utils/AxiosToastError";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const ForgotPassword = () => {
   const [data, setData] = useState({
     email: "",
-    password: "",
   });
-  const [showPasword, setshowPasword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,7 +30,7 @@ const Login = () => {
 
     try {
       const response = await Axios({
-        ...SummaryApi.login,
+        ...SummaryApi.forgot_password,
         data: data,
       });
       if (response.data.error) {
@@ -44,7 +42,7 @@ const Login = () => {
           email: "",
           password: "",
         });
-        navigate("/");
+        navigate("/otp-verification");
       }
       console.log(response);
     } catch (error) {
@@ -56,7 +54,8 @@ const Login = () => {
     <section className=" w-full container mx-auto px-2">
       <div className="bg-white my-4 w-full max-w-lg mx-auto rounded p-7">
         <p className="text-3xl font-bold text-[#67AB95] text-center mt-6">
-          Login to your <span className="text-[#D69CAA]">account</span> 🔐
+          Enter your <span className="text-[#D69CAA]">email</span> to receive
+          OTP ✉️
         </p>
 
         <form onSubmit={handleSubmit} action="" className="grid gap-4 mt-6">
@@ -73,47 +72,23 @@ const Login = () => {
             />
           </div>
 
-          <div className="grid gap-1">
-            <label htmlFor="password">Password:</label>
-            <div className="bg-blue-50 p-2 border rounded-md flex items-center focus-within:border-[#D69CAA]">
-              <input
-                type={showPasword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className="w-full outline-none"
-              />
-              <div
-                onClick={() => {
-                  setshowPasword((prev) => !prev);
-                }}
-                className="cursor-pointer"
-              >
-                {showPasword ? <FaRegEye /> : <FaRegEyeSlash />}
-              </div>
-            </div>
-            <Link to={'/forgot-password'} className="block ml-auto hover:text-[#D69CAA]">Forgot password ?</Link>
-          </div>
-
           <button
             disabled={!validateValue}
             className={`${
               validateValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500"
             }  my-3 font-semibold text-white p-2 rounded-md tracking-wide`}
           >
-            Login
+            Send otp
           </button>
         </form>
 
         <p className="text-center">
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Link
             className="font-semibold text-[#67AB95] hover:text-[#D69CAA] hover:underline transition-all duration-300"
-            to="/register"
+            to="/login"
           >
-            Register
+            Login
           </Link>
         </p>
       </div>
@@ -121,4 +96,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
