@@ -5,6 +5,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegCircleUser } from "react-icons/fa6";
 import useMobile from "../hooks/useMobile";
 import { FaCartShopping } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import { GoTriangleDown } from "react-icons/go";
+import { GoTriangleUp } from "react-icons/go";
 
 const Header = () => {
   const [isMobile] = useMobile();
@@ -13,9 +16,13 @@ const Header = () => {
 
   const isSearchPage = location.pathname === "/search";
   const navigate = useNavigate();
+
+  const user = useSelector((state) => state?.user);
+  console.log(user);
+
   const redirectToLoginPage = () => {
     navigate("/login");
-  }
+  };
 
   return (
     <header className="h-24 lg:h-20 sticky lg:shadow-md top-0 flex justify-center flex-col gap-1 bg-white">
@@ -54,14 +61,28 @@ const Header = () => {
               <FaRegCircleUser size={25} />
             </button>
 
-
             {/**Desktop**/}
             <div className="hidden lg:flex items-center gap-10">
-              <button onClick={redirectToLoginPage} className="text-lg px-2 font-semibold">Login</button>
+              {user?._id ? (
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p>Account</p>
+                    <GoTriangleDown />
+                    {/* <GoTriangleUp /> */}
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={redirectToLoginPage}
+                  className="text-lg px-2 font-semibold"
+                >
+                  Login
+                </button>
+              )}
               <button className="flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-3 text-white rounded-lg">
                 {/* {add to cart icons} */}
                 <div className="animate-bounce">
-                <FaCartShopping  size={28} />
+                  <FaCartShopping size={28} />
                 </div>
                 <div className="font-semibold">
                   <p> My cart </p>

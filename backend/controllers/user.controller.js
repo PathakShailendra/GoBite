@@ -132,6 +132,10 @@ export async function loginController(req, res, next) {
     const accessToken = await generatedAccessToken(user._id);
     const refreshToken = await genertedRefreshToken(user._id);
 
+    const updateUser = await userModel.findByIdAndUpdate(user._id, {
+      last_login_date : new Date()
+    })
+
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
@@ -457,9 +461,26 @@ export async function refreshToken(req, res) {
         accessToken: newAccessToken,
       },
     });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
 
+export async function userDetails(req, res) {
+  try {
+    const userId = req.userId;
+    const user = await userModel.findById(userId).select("-password -refresh_token");
 
-
+    return res.status(200).json({
+      message: "User details fetched successfully",
+      success: true,
+      error: false,
+      data: user,
+    });
   } catch (error) {
     return res.status(500).json({
       message: error.message || error,
