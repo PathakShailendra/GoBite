@@ -6,6 +6,9 @@ import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import AxiosToastError from "../utils/AxiosToastError";
 import { Link, useNavigate } from "react-router-dom";
+import fetchUserDetails from "../utils/fetchUserDetails";
+import { useDispatch } from "react-redux";
+import { setUserDetails } from "../store/userSlice";
 
 const Login = () => {
   const [data, setData] = useState({
@@ -14,6 +17,8 @@ const Login = () => {
   });
   const [showPasword, setshowPasword] = useState(false);
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,8 +45,12 @@ const Login = () => {
       }
       if (response.data.success) {
         toast.success(response.data.message);
-        localStorage.setItem('accessToken', response.data.data.accessToken);
-        localStorage.setItem('refreshToken', response.data.data.refreshToken);
+        localStorage.setItem("accessToken", response.data.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.data.refreshToken);
+
+        const userDetails = await fetchUserDetails();
+        dispatch(setUserDetails(userDetails.data));
+
         setData({
           email: "",
           password: "",
@@ -95,7 +104,12 @@ const Login = () => {
                 {showPasword ? <FaRegEye /> : <FaRegEyeSlash />}
               </div>
             </div>
-            <Link to={'/forgot-password'} className="block ml-auto hover:text-[#D69CAA]">Forgot password ?</Link>
+            <Link
+              to={"/forgot-password"}
+              className="block ml-auto hover:text-[#D69CAA]"
+            >
+              Forgot password ?
+            </Link>
           </div>
 
           <button
