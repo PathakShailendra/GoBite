@@ -56,26 +56,62 @@ const UserMenu = ({ close }) => {
 
       <Divider />
 
-      <Link
-        onClick={handleClose}
-        to={"/dashboard/myorders"}
-        className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
-      >
-        My Orders
-      </Link>
-      <Link
-        onClick={handleClose}
-        to={"/dashboard/address"}
-        className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
-      >
-        Save Addresses
-      </Link>
-      <button
-        onClick={handleLogout}
-        className="w-full text-left px-2 py-2 rounded-md text-red-600 font-medium transition-all duration-200 hover:bg-red-100"
-      >
-        Logout
-      </button>
+      <div className=" grid gap-1">
+        
+
+        <Link
+          onClick={handleClose}
+          to={"/dashboard/category"}
+          className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
+        >
+          Category
+        </Link>
+
+        <Link
+          onClick={handleClose}
+          to={"/dashboard/subcategory"}
+          className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
+        >
+          SubCategory
+        </Link>
+
+        <Link
+          onClick={handleClose}
+          to={"/dashboard/upload-product"}
+          className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
+        >
+          Upload Products
+        </Link>
+
+        <Link
+          onClick={handleClose}
+          to={"/dashboard/product"}
+          className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
+        >
+          Products
+        </Link>
+
+        <Link
+          onClick={handleClose}
+          to={"/dashboard/myorders"}
+          className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
+        >
+          My Orders
+        </Link>
+        <Link
+          onClick={handleClose}
+          to={"/dashboard/address"}
+          className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
+        >
+          Save Addresses
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="w-full text-left px-2 py-2 rounded-md text-red-600 font-medium transition-all duration-200 hover:bg-red-100"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
