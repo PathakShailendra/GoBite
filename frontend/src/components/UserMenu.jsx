@@ -13,6 +13,11 @@ const UserMenu = ({ close }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const handleClose = () => {
+    if (close) {
+      close();
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -36,9 +41,15 @@ const UserMenu = ({ close }) => {
   return (
     <div className="text-gray-800">
       <div className="font-semibold text-lg">My Account</div>
-      <div className="text-sm text-gray-600 mt-1 flex items-center gap-3" >
-        <span className="max-w-52 text-ellipsis line-clamp-1">{user.name || user.mobile}</span>
-        <Link to={"/dashboard/profile"} className="hover:text-[#D69CAA]">
+      <div className="text-sm text-gray-600 mt-1 flex items-center gap-3">
+        <span className="max-w-52 text-ellipsis line-clamp-1">
+          {user.name || user.mobile}
+        </span>
+        <Link
+          onClick={handleClose}
+          to={"/dashboard/profile"}
+          className="hover:text-[#D69CAA]"
+        >
           <FiExternalLink size={17} />
         </Link>
       </div>
@@ -46,12 +57,14 @@ const UserMenu = ({ close }) => {
       <Divider />
 
       <Link
+        onClick={handleClose}
         to={"/dashboard/myorders"}
         className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
       >
         My Orders
       </Link>
       <Link
+        onClick={handleClose}
         to={"/dashboard/address"}
         className="block px-2 py-2 rounded-md transition-all duration-200 hover:bg-gray-100"
       >
