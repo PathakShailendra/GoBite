@@ -1,4 +1,4 @@
-import CategoryModel from "../models/category.model";
+import CategoryModel from "../models/category.model.js";
 
 export const AddCategoryController = async (req, res, next) => {
   try {
@@ -20,7 +20,7 @@ export const AddCategoryController = async (req, res, next) => {
 
     if(!saveCategory) {
         return res.status(500).json({
-            message: "Not created",
+            message: "Category not created",
             error : true,
             success : false
         })
@@ -41,3 +41,15 @@ export const AddCategoryController = async (req, res, next) => {
     });
   }
 };
+
+export const getCategoryController = async (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}

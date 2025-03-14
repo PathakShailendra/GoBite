@@ -6,6 +6,8 @@ import morgan from "morgan";
 import helmet from "helmet";
 import connectDB from "./config/db.js";
 import userRoutes from './routes/user.routes.js'
+import categoryRoutes from "./routes/category.routes.js"
+import uploadRoutes from "./routes/upload.routes.js"
 
 dotenv.config();
 
@@ -30,8 +32,9 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello World" });
 });
 
-app.use('/api/user', userRoutes)
-
+app.use('/api/user', userRoutes);
+app.use('/api/category', categoryRoutes);
+app.use('/api/file', uploadRoutes)
 
 connectDB().then(() => {  
 app.listen(process.env.PORT, () => {
