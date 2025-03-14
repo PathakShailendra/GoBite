@@ -1,9 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UploadCategoryModel from "../components/UploadCategoryModel";
+import Loading from "../components/Loading";
 
 const CategoryPage = () => {
 
   const [openUploadCategory, setopenUploadCategory] = useState(false)
+  const [loading, setloading] = useState(true)
+  const fetchCategory = async () => {
+    try {
+      // setloading(true);
+      
+    } catch (error) {
+      
+    }
+    finally{
+      // setloading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchCategory()
+  }, [])
 
   return (
     <section>
@@ -18,6 +35,11 @@ const CategoryPage = () => {
           Add Category
         </button>
       </div>
+
+    {
+      loading && <Loading />
+    }
+
       {
         openUploadCategory && <UploadCategoryModel close={()=>setopenUploadCategory(false)} />
       }
