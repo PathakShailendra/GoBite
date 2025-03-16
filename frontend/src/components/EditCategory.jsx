@@ -6,12 +6,13 @@ import SummaryApi from "../common/SummaryApi.js";
 import toast from "react-hot-toast"
 import AxiosToastError from "../utils/AxiosToastError.js"
 
-const UploadCategoryModel = ({ close, fetchData }) => {
+const EditCategory = ({ close, fetchData, data: CategoryData }) => {
   const [data, setdata] = useState({
-    name: "",
-    image: "",
+    _id : CategoryData._id,
+    name:CategoryData.name,
+    image: CategoryData.image,
   });
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -23,27 +24,30 @@ const UploadCategoryModel = ({ close, fetchData }) => {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      setloading(true)
+      setloading(true);
       const response = await Axios({
-        ...SummaryApi.addCategory,
-        data : data
-      })
-      const {data : responseData} = response
-      if(responseData.success) {
+        ...SummaryApi.updateCategory,
+        data: data,
+      });
+      const { data: responseData } = response;
+      if (responseData.success) {
         toast.success(responseData.message);
-        close()
-        fetchData()
+        close();
+        fetchData();
       }
     } catch (error) {
-      AxiosToastError(error)
-    }finally {
-      setloading(false)
+      AxiosToastError(error);
+    } finally {
+      setloading(false);
     }
   };
+
+
 
   const handleUploadCategoryImage = async (e) => {
     const file = e.target.files[0];
@@ -51,9 +55,10 @@ const UploadCategoryModel = ({ close, fetchData }) => {
       return;
     }
 
+    setloading(true)
     const response = await uploadImage(file);
     const { data: ImageResponse } = response;
-
+    setloading(false)
     setdata((prev) => {
       return {
         ...prev,
@@ -61,6 +66,7 @@ const UploadCategoryModel = ({ close, fetchData }) => {
       };
     });
   };
+
 
   return (
     <section className="fixed top-0 bottom-0 left-0 right-0 p-4 bg-neutral-800/60 flex items-center justify-center">
@@ -108,15 +114,17 @@ const UploadCategoryModel = ({ close, fetchData }) => {
               <label htmlFor="uploadCategoryImage">
                 <div
                   className={`
-    relative w-fit px-4 py-1.5 text-sm font-medium rounded-full overflow-hidden shadow-md transition-all duration-300 ease-in-out
-    ${
-      !data.name
-        ? "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700 shadow-none"
-        : "text-white bg-gradient-to-r from-[#D69CAA] to-[#68AB95] before:absolute before:top-0 before:left-0 before:w-0 before:h-full before:bg-white/20 before:transition-all before:duration-500 before:ease-out hover:before:w-full hover:shadow-lg active:scale-95 cursor-pointer select-none"
-    }
-  `}
+        relative w-fit px-4 py-1.5 text-sm font-medium rounded-full overflow-hidden shadow-md transition-all duration-300 ease-in-out
+        ${
+          !data.name
+            ? "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700 shadow-none"
+            : "text-white bg-gradient-to-r from-[#D69CAA] to-[#68AB95] before:absolute before:top-0 before:left-0 before:w-0 before:h-full before:bg-white/20 before:transition-all before:duration-500 before:ease-out hover:before:w-full hover:shadow-lg active:scale-95 cursor-pointer select-none"
+        }
+      `}
                 >
-                  Upload Image
+                    {
+                        loading ? "Uploading..." : "Upload Image"
+                    }
                 </div>
                 <input
                   disabled={!data.name}
@@ -131,15 +139,15 @@ const UploadCategoryModel = ({ close, fetchData }) => {
 
           <button
             className={`
-    relative w-full px-6 py-2.5 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 ease-out
-    ${
-      data.name && data.image
-        ? "bg-[#D69CAA] text-white hover:bg-[#68AB95] hover:text-black hover:shadow-lg active:scale-95 cursor-pointer select-none"
-        : "bg-[#A1A8B5] text-gray-800 opacity-80 cursor-not-allowed"
-    }
-  `}
+        relative w-full px-6 py-2.5 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 ease-out
+        ${
+          data.name && data.image
+            ? "bg-[#D69CAA] text-white hover:bg-[#68AB95] hover:text-black hover:shadow-lg active:scale-95 cursor-pointer select-none"
+            : "bg-[#A1A8B5] text-gray-800 opacity-80 cursor-not-allowed"
+        }
+      `}
           >
-            Add Category
+            Update Category
           </button>
         </form>
       </div>
@@ -147,5 +155,4 @@ const UploadCategoryModel = ({ close, fetchData }) => {
   );
 };
 
-export default UploadCategoryModel;
-
+export default EditCategory;

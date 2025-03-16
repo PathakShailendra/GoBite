@@ -4,11 +4,17 @@ import Loading from "../components/Loading";
 import NoData from "../components/NoData";
 import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
+import EditCategory from "../components/EditCategory";
 
 const CategoryPage = () => {
   const [openUploadCategory, setopenUploadCategory] = useState(false);
   const [loading, setloading] = useState(false);
   const [categoryData, setcategoryData] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editData,setEditData] = useState({
+    name : "",
+    image : "",
+})
   const fetchCategory = async () => {
     try {
       setloading(true);
@@ -20,7 +26,6 @@ const CategoryPage = () => {
       if (responseData.success) {
         setcategoryData(responseData.data);
       }
-      console.log(response);
     } catch (error) {
     } finally {
       setloading(false);
@@ -31,10 +36,12 @@ const CategoryPage = () => {
     fetchCategory();
   }, []);
 
+  console.log(categoryData)
+
   return (
     <section>
       <div className="p-2 bg-white shadow-md flex items-center justify-between">
-        <h2 className="font-semibold">Category</h2>
+        <h2 className="font-semibold">Update Category</h2>
         <button
           onClick={() => setopenUploadCategory(true)}
           className="text-xs font-semibold border border-[#68AB95] px-4 py-2 rounded-full mt-5 
@@ -47,22 +54,57 @@ const CategoryPage = () => {
       </div>
       {!categoryData[0] && !loading && <NoData />}
 
-      {loading && <Loading />}
-
       <div className="p-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 overflow-hidden">
-        {
-        categoryData.map((category, index) => {
+        {categoryData.map((category, index) => {
           return (
-            <div className="w-40 h-48 rounded shadow-md overflow-hidden">
-              <img src={category.image} alt={category.name} className="w-full object-scale-down" />
+            <div
+              key={index}
+              className="w-40 h-60 rounded-lg shadow-md overflow-hidden bg-white transition-transform duration-300 hover:scale-102 hover:shadow-lg"
+            >
+              <img
+                src={category.image}
+                alt={category.name}
+                className="w-full h-40 object-cover"
+              />
+              <p className="text-center text-sm font-semibold text-gray-700 mt-2">
+                {category.name}
+              </p>
+
+              {/* Styled Button Section */}
+              <div className="flex justify-center gap-3 mt-3">
+                <button
+                  onClick={() => {
+                    setOpenEdit(true);
+                    setEditData(category)
+                  }}
+                  className="px-3 py-1 text-sm font-medium text-white bg-[#68AB95] rounded-md shadow-md transition-all duration-300 hover:bg-[#4F8273] hover:shadow-lg"
+                >
+                  Edit
+                </button>
+                <button className="px-3 py-1 text-sm font-medium text-white bg-[#D69CAA] rounded-md shadow-md transition-all duration-300 hover:bg-[#AD6F83] hover:shadow-lg">
+                  Delete
+                </button>
+              </div>
             </div>
           );
-        })
-        }
+        })}
       </div>
 
+      {loading && <Loading />}
+
       {openUploadCategory && (
-        <UploadCategoryModel fetchData={fetchCategory} close={() => setopenUploadCategory(false)} />
+        <UploadCategoryModel
+          fetchData={fetchCategory}
+          close={() => setopenUploadCategory(false)}
+        />
+      )}
+
+      {openEdit && (
+        <EditCategory
+          data={editData}
+          close={() => setOpenEdit(false)}
+          fetchData={fetchCategory}
+        />
       )}
     </section>
   );
