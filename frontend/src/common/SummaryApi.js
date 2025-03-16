@@ -50,7 +50,7 @@ const SummaryApi = {
         method: 'post',
     },
     getCategory : {
-        url : '/api/file/get',
+        url : '/api/category/get',
         method: 'get',
     }
 }

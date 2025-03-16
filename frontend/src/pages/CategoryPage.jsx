@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import UploadCategoryModel from "../components/UploadCategoryModel";
 import Loading from "../components/Loading";
 import NoData from "../components/NoData";
+import Axios from "../utils/Axios";
+import SummaryApi from "../common/SummaryApi";
 
 const CategoryPage = () => {
   const [openUploadCategory, setopenUploadCategory] = useState(false);
@@ -10,6 +12,15 @@ const CategoryPage = () => {
   const fetchCategory = async () => {
     try {
       setloading(true);
+      const response = await Axios({
+        ...SummaryApi.getCategory,
+      });
+
+      const { data: responseData } = response;
+      if (responseData.success) {
+        setcategoryData(responseData.data);
+      }
+      console.log(response);
     } catch (error) {
     } finally {
       setloading(false);
@@ -34,16 +45,24 @@ const CategoryPage = () => {
           Add Category
         </button>
       </div>
-      {
-        !categoryData[0] && !loading && (
-          <NoData />
-        )
-      }
+      {!categoryData[0] && !loading && <NoData />}
 
       {loading && <Loading />}
 
+      <div className="p-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 overflow-hidden">
+        {
+        categoryData.map((category, index) => {
+          return (
+            <div className="w-40 h-48 rounded shadow-md overflow-hidden">
+              <img src={category.image} alt={category.name} className="w-full object-scale-down" />
+            </div>
+          );
+        })
+        }
+      </div>
+
       {openUploadCategory && (
-        <UploadCategoryModel close={() => setopenUploadCategory(false)} />
+        <UploadCategoryModel fetchData={fetchCategory} close={() => setopenUploadCategory(false)} />
       )}
     </section>
   );
