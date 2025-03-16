@@ -5,16 +5,23 @@ import NoData from "../components/NoData";
 import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import EditCategory from "../components/EditCategory";
+import AxiosToastError from "../utils/AxiosToastError";
+import toast from "react-hot-toast";
+import CofirmBox from "../components/ConfirmBox";
 
 const CategoryPage = () => {
   const [openUploadCategory, setopenUploadCategory] = useState(false);
   const [loading, setloading] = useState(false);
   const [categoryData, setcategoryData] = useState([]);
   const [openEdit, setOpenEdit] = useState(false);
-  const [editData,setEditData] = useState({
-    name : "",
-    image : "",
-})
+  const [editData, setEditData] = useState({
+    name: "",
+    image: "",
+  });
+  const [openConfirmBoxDelete, setopenConfirmBoxDelete] = useState(false);
+  const [deleteCategory, setDeleteCategory] = useState({
+    _id: "",
+  });
   const fetchCategory = async () => {
     try {
       setloading(true);
@@ -36,7 +43,24 @@ const CategoryPage = () => {
     fetchCategory();
   }, []);
 
-  console.log(categoryData)
+  const handleDeleteCategory = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.deleteCategory,
+        data: deleteCategory,
+      });
+
+      const { data: responseData } = response;
+
+      if (responseData.success) {
+        toast.success(responseData.message);
+        fetchCategory();
+        setopenConfirmBoxDelete(false);
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  };
 
   return (
     <section>
@@ -75,13 +99,19 @@ const CategoryPage = () => {
                 <button
                   onClick={() => {
                     setOpenEdit(true);
-                    setEditData(category)
+                    setEditData(category);
                   }}
                   className="px-3 py-1 text-sm font-medium text-white bg-[#68AB95] rounded-md shadow-md transition-all duration-300 hover:bg-[#4F8273] hover:shadow-lg"
                 >
                   Edit
                 </button>
-                <button className="px-3 py-1 text-sm font-medium text-white bg-[#D69CAA] rounded-md shadow-md transition-all duration-300 hover:bg-[#AD6F83] hover:shadow-lg">
+                <button
+                  onClick={() => {
+                    setopenConfirmBoxDelete(true);
+                    setDeleteCategory(category)
+                  }}
+                  className="px-3 py-1 text-sm font-medium text-white bg-[#D69CAA] rounded-md shadow-md transition-all duration-300 hover:bg-[#AD6F83] hover:shadow-lg"
+                >
                   Delete
                 </button>
               </div>
@@ -104,6 +134,14 @@ const CategoryPage = () => {
           data={editData}
           close={() => setOpenEdit(false)}
           fetchData={fetchCategory}
+        />
+      )}
+
+      {openConfirmBoxDelete && (
+        <CofirmBox
+          close={() => setopenConfirmBoxDelete(false)}
+          cancel={() => setopenConfirmBoxDelete(false)}
+          confirm={handleDeleteCategory}
         />
       )}
     </section>

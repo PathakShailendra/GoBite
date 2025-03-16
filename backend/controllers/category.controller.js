@@ -1,4 +1,6 @@
 import CategoryModel from "../models/category.model.js";
+import SubCategoryModel from "../models/subCategory.model.js";
+import ProductModel from "../models/product.model.js";
 
 export const AddCategoryController = async (req, res, next) => {
   try {
@@ -43,7 +45,7 @@ export const AddCategoryController = async (req, res, next) => {
 
 export const getCategoryController = async (req, res, next) => {
   try {
-    const data = await CategoryModel.find();
+    const data = await CategoryModel.find().sort({createdAt : -1});
     return res.status(200).json({
       message: "Category data fetched successfully",
       data: data,
@@ -87,3 +89,46 @@ export const updateCategoryController = async (req, res, next) => {
     });
   }
 };
+
+export const deleteCategoryController = async (req, res, next) => {
+  try {
+    const { _id } = req.body;
+
+    const checkSubCategory = await SubCategoryModel.find({
+      category: {
+        $in: [_id],
+      },
+    }).countDocuments();
+
+    const checkProduct = await ProductModel.find({
+      category: {
+        $in: [_id],
+      },
+    }).countDocuments();
+
+    if (checkSubCategory > 0 || checkProduct > 0) {
+      return res.status(400).json({
+        message: "Category is already in use can't delete",
+        error: true,
+        success: false,
+      });
+    }
+
+    const deleteCategory = await CategoryModel.deleteOne({ _id: _id });
+
+    return res.json({
+      message: "category deleted successfully",
+      data: deleteCategory,
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+};
+
+
