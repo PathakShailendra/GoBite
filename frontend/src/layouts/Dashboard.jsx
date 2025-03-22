@@ -1,8 +1,11 @@
 import React from "react";
 import UserMenu from "../components/UserMenu";
 import { Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
+  const user = useSelector((state) => state.user);
+  console.log(user);
   return (
     <section className="bg-white">
       <div className="container mx-auto w-full p-3 grid lg:grid-cols-[250px_1fr] gap-4">
@@ -13,7 +16,7 @@ const Dashboard = () => {
 
         {/* Right for content (Takes Remaining Space) */}
         <div className="flex-1 bg-white min-h-[80vh]">
-            <Outlet />
+          <Outlet />
         </div>
       </div>
     </section>
