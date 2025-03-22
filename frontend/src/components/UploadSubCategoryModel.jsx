@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import uploadImage from "../utils/UploadImage";
 import { useSelector } from "react-redux";
+import Axios from "../utils/Axios";
+import SummaryApi from "../common/SummaryApi";
+import toast from "react-hot-toast";
+import AxiosToastError from "../utils/AxiosToastError";
 
 const UploadSubCategoryModel = ({ close }) => {
   const [subCategoryData, setSubCategoryData] = useState({
@@ -10,7 +14,7 @@ const UploadSubCategoryModel = ({ close }) => {
     category: [],
   });
 
-  console.log(subCategoryData)
+  console.log(subCategoryData);
 
   const allCategory = useSelector((state) => state.product.allCategory);
 
@@ -47,13 +51,25 @@ const UploadSubCategoryModel = ({ close }) => {
     });
   };
 
-  const handleSubmitSubcategory = (e) => {
-   try {
-    
-   } catch (error) {
-    
-   }
-  }
+  const handleSubmitSubcategory = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await Axios({
+        ...SummaryApi.createSubcategory,
+        data: subCategoryData,
+      });
+
+      const { data: responseData } = response;
+      if (responseData.success) {
+        toast.success(responseData.message);
+        if (close) {
+          close();
+        }
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  };
 
   return (
     <section className="fixed top-0 right-0 bottom-0 left-0 bg-neutral-800/70 z-50 flex items-center justify-center p-4">
@@ -158,9 +174,7 @@ const UploadSubCategoryModel = ({ close }) => {
                 }}
                 className="w-full p-2 bg-transparent outline-none"
               >
-                <option value={""} disabled>
-                  Select Category
-                </option>
+                <option value={""}>Select Category</option>
                 {allCategory.map((category, index) => {
                   return (
                     <option
@@ -176,19 +190,19 @@ const UploadSubCategoryModel = ({ close }) => {
           </div>
 
           <button
-            className={`px-4 py-2 border
-                            ${
-                              subCategoryData?.name &&
-                              subCategoryData?.image &&
-                              subCategoryData?.category[0]
-                                ? "bg-[#D69CAA] hover:bg-[#c47789]"
-                                : "bg-gray-200"
-                            }    
-                            font-semibold
-                        `}
-          >
-            Submit
-          </button>
+  className={`px-4 py-2 border rounded-lg font-semibold transition-all duration-300 ease-in-out
+              ${
+                subCategoryData?.name &&
+                subCategoryData?.image &&
+                subCategoryData?.category[0]
+                  ? "bg-[#D69CAA] text-white hover:bg-[#c47789] active:scale-105 shadow-md hover:shadow-lg"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+  disabled={!(subCategoryData?.name && subCategoryData?.image && subCategoryData?.category[0])}
+>
+  Submit
+</button>
+
         </form>
       </div>
     </section>
@@ -197,4 +211,3 @@ const UploadSubCategoryModel = ({ close }) => {
 
 export default UploadSubCategoryModel;
 
-// video 4:22 hour ki ho gyi he aur sub category wala part almost complete ho gaya he ab bas final usme add sub category wali button add karni he and api call karke wo databse me save ho jyga, uske baad iss upload sub category model ka ui sahi karna he har ek cheez ka aur wo uploading wala feature bhi daalna he jab image upload karte he tab aur ho sake toh button koi aur achi dekhkar integrate kar dena
