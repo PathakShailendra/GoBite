@@ -3,15 +3,16 @@ import { IoClose } from "react-icons/io5";
 import uploadImage from "../utils/UploadImage.js";
 import Axios from "../utils/Axios.js";
 import SummaryApi from "../common/SummaryApi.js";
-import toast from "react-hot-toast"
-import AxiosToastError from "../utils/AxiosToastError.js"
+import toast from "react-hot-toast";
+import AxiosToastError from "../utils/AxiosToastError.js";
 
 const UploadCategoryModel = ({ close, fetchData }) => {
   const [data, setdata] = useState({
     name: "",
     image: "",
   });
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
+  const [imageLoading, setimageLoading] = useState(false);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -27,39 +28,45 @@ const UploadCategoryModel = ({ close, fetchData }) => {
     e.preventDefault();
 
     try {
-      setloading(true)
+      setloading(true);
       const response = await Axios({
         ...SummaryApi.addCategory,
-        data : data
-      })
-      const {data : responseData} = response
-      if(responseData.success) {
+        data: data,
+      });
+      const { data: responseData } = response;
+      if (responseData.success) {
         toast.success(responseData.message);
-        close()
-        fetchData()
+        close();
+        fetchData();
       }
     } catch (error) {
-      AxiosToastError(error)
-    }finally {
-      setloading(false)
+      AxiosToastError(error);
+    } finally {
+      setloading(false);
     }
   };
 
   const handleUploadCategoryImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      return;
+    try {
+      const file = e.target.files[0];
+      if (!file) {
+        return;
+      }
+
+      const response = await uploadImage(file);
+      const { data: ImageResponse } = response;
+
+      setdata((prev) => {
+        return {
+          ...prev,
+          image: ImageResponse.data.url,
+        };
+      });
+    } catch (error) {
+      AxiosToastError(error);
+    } finally {
+      setimageLoading(false);
     }
-
-    const response = await uploadImage(file);
-    const { data: ImageResponse } = response;
-
-    setdata((prev) => {
-      return {
-        ...prev,
-        image: ImageResponse.data.url,
-      };
-    });
   };
 
   return (
@@ -116,7 +123,7 @@ const UploadCategoryModel = ({ close, fetchData }) => {
     }
   `}
                 >
-                  Upload Image
+                  {imageLoading ? "Uploading..." : "Upload Image"}
                 </div>
                 <input
                   disabled={!data.name}
@@ -148,4 +155,3 @@ const UploadCategoryModel = ({ close, fetchData }) => {
 };
 
 export default UploadCategoryModel;
-

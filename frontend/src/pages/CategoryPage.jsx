@@ -83,16 +83,16 @@ const CategoryPage = () => {
           return (
             <div
               key={index}
-              className="w-40 h-60 rounded-lg shadow-md overflow-hidden bg-white transition-transform duration-300 hover:scale-102 hover:shadow-lg"
+              className="w-40 h-64 rounded-lg shadow-md overflow-hidden bg-white transition-transform duration-300 hover:scale-102 hover:shadow-lg"
             >
               <img
                 src={category.image}
                 alt={category.name}
-                className="w-full h-40 object-cover"
+                className="w-full h-48 object-cover"
               />
-              <p className="text-center text-sm font-semibold text-gray-700 mt-2">
+              {/* <p className="text-center text-sm font-semibold text-gray-700 mt-2">
                 {category.name}
-              </p>
+              </p> */}
 
               {/* Styled Button Section */}
               <div className="flex justify-center gap-3 mt-3">
@@ -150,4 +150,3 @@ const CategoryPage = () => {
 
 export default CategoryPage;
 
-// Loading spinner add ho gaya he ab getCategory wali api call karna he video 1:38 min ki ho gyi he
