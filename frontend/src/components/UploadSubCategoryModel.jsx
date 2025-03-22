@@ -10,6 +10,8 @@ const UploadSubCategoryModel = ({ close }) => {
     category: [],
   });
 
+  console.log(subCategoryData)
+
   const allCategory = useSelector((state) => state.product.allCategory);
 
   const handleChange = (e) => {
@@ -45,6 +47,14 @@ const UploadSubCategoryModel = ({ close }) => {
     });
   };
 
+  const handleSubmitSubcategory = (e) => {
+   try {
+    
+   } catch (error) {
+    
+   }
+  }
+
   return (
     <section className="fixed top-0 right-0 bottom-0 left-0 bg-neutral-800/70 z-50 flex items-center justify-center p-4">
       <div className="w-full max-w-5xl bg-white p-4 rounded">
@@ -60,7 +70,7 @@ const UploadSubCategoryModel = ({ close }) => {
             />
           </button>
         </div>
-        <form className="my-3 grid gap-3">
+        <form onSubmit={handleSubmitSubcategory} className="my-3 grid gap-3">
           <div className="grid gap-1">
             <label htmlFor="name">Name</label>
             <input
@@ -164,6 +174,21 @@ const UploadSubCategoryModel = ({ close }) => {
               </select>
             </div>
           </div>
+
+          <button
+            className={`px-4 py-2 border
+                            ${
+                              subCategoryData?.name &&
+                              subCategoryData?.image &&
+                              subCategoryData?.category[0]
+                                ? "bg-[#D69CAA] hover:bg-[#c47789]"
+                                : "bg-gray-200"
+                            }    
+                            font-semibold
+                        `}
+          >
+            Submit
+          </button>
         </form>
       </div>
     </section>
@@ -171,3 +196,5 @@ const UploadSubCategoryModel = ({ close }) => {
 };
 
 export default UploadSubCategoryModel;
+
+// video 4:22 hour ki ho gyi he aur sub category wala part almost complete ho gaya he ab bas final usme add sub category wali button add karni he and api call karke wo databse me save ho jyga, uske baad iss upload sub category model ka ui sahi karna he har ek cheez ka aur wo uploading wala feature bhi daalna he jab image upload karte he tab aur ho sake toh button koi aur achi dekhkar integrate kar dena
