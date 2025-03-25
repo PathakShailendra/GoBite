@@ -3,11 +3,16 @@ import UploadSubCategoryModel from "../components/UploadSubCategoryModel";
 import AxiosToastError from "../utils/AxiosToastError";
 import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
+import DisplayTable from "../components/DisplayTable";
+import { createColumnHelper } from '@tanstack/react-table'
+import ViewImage from "../components/ViewImage";
 
 const SubCategoryPage = () => {
   const [openAddSubCategory, setOpenAddSubCategory] = useState(false);
   const [data, setdata] = useState([]);
   const [loading, setLoading] = useState(false);
+  const columnHelper = createColumnHelper();
+  const [ImageURL,setImageURL] = useState("");
 
   const fetchSubCategory = async () => {
     try {
@@ -31,7 +36,44 @@ const SubCategoryPage = () => {
     fetchSubCategory();
   }, []);
 
-  console.log(data)
+  const column = [
+    columnHelper.accessor('name', {
+      header: 'Name',
+    }),
+    columnHelper.accessor('image',{
+      header : "Image",
+      cell : ({row})=>{
+        return <div className='flex justify-center items-center'>
+            <img 
+                src={row.original.image}
+                alt={row.original.name}
+                className='w-10 h-10 cursor-pointer'
+                onClick={()=>{
+                  setImageURL(row.original)
+                }}      
+            />
+        </div>
+      }
+    }),
+    columnHelper.accessor("category",{
+      header : "Category",
+      cell : ({row})=>{
+       return(
+         <>
+           {
+             row.original.category.map((c,index)=>{
+               return(
+                 <p key={c._id+"table"} className='shadow-md px-1 inline-block'>{c.name}</p>
+               )
+             })
+           }
+         </>
+       )
+      }
+   }),
+  ];  
+
+  // console.log(data)
   return (
     <section>
       <div className="p-2 bg-white shadow-md flex items-center justify-between">
@@ -47,11 +89,19 @@ const SubCategoryPage = () => {
         </button>
       </div>
 
-      
+      <div>
+        <DisplayTable
+        data={data}
+        column={column} />
+      </div>
 
 
       {
         openAddSubCategory && <UploadSubCategoryModel close={() => setOpenAddSubCategory(false)} />
+      }
+
+      {
+        ImageURL && <ViewImage data={ImageURL} close={() => setImageURL("")} />
       }
     </section>
   );
