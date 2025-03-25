@@ -7,11 +7,12 @@ import SummaryApi from "../common/SummaryApi";
 import toast from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 
-const UploadSubCategoryModel = ({ close }) => {
+const EditSubCategory = ({ close, data, fetchData }) => {
   const [subCategoryData, setSubCategoryData] = useState({
-    name: "",
-    image: "",
-    category: [],
+    _id: data._id,
+    name: data.name,
+    image: data.image,
+    category: data.category || [],
   });
 
   console.log(subCategoryData);
@@ -55,7 +56,7 @@ const UploadSubCategoryModel = ({ close }) => {
     e.preventDefault();
     try {
       const response = await Axios({
-        ...SummaryApi.createSubcategory,
+        ...SummaryApi.updateSubcategory,
         data: subCategoryData,
       });
 
@@ -65,6 +66,9 @@ const UploadSubCategoryModel = ({ close }) => {
         if (close) {
           close();
         }
+        if(fetchData){
+          fetchData();
+          }
       }
     } catch (error) {
       AxiosToastError(error);
@@ -75,7 +79,7 @@ const UploadSubCategoryModel = ({ close }) => {
     <section className="fixed top-0 right-0 bottom-0 left-0 bg-neutral-800/70 z-50 flex items-center justify-center p-4">
       <div className="w-full max-w-5xl bg-white p-4 rounded">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="font-semibold">Add Sub Category</h1>
+          <h1 className="font-semibold">Edit Sub Category</h1>
           <button
             onClick={close}
             className="w-fit block ml-auto p-1.5 rounded-full transition-all duration-300 ease-in-out hover:bg-gray-200/50 hover:scale-110 hover:shadow-md active:scale-95 cursor-pointer"
@@ -209,5 +213,6 @@ const UploadSubCategoryModel = ({ close }) => {
   );
 };
 
-export default UploadSubCategoryModel;
+export default EditSubCategory;
+
 
