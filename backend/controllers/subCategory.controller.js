@@ -89,3 +89,23 @@ export const updateSubCategoryController = async(req,res)=>{
       })
   }
 }
+
+export const deleteSubCategoryController = async(req,res)=>{
+  try {
+      const { _id } = req.body 
+      const deleteSub = await SubCategoryModel.findByIdAndDelete(_id)
+
+      return res.json({
+          message : "Deleted successfully",
+          data : deleteSub,
+          error : false,
+          success : true
+      })
+  } catch (error) {
+      return res.status(500).json({
+          message : error.message || error,
+          error : true,
+          success : false
+      })
+  }
+}

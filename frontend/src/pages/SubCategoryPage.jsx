@@ -10,6 +10,8 @@ import { LuPencil } from "react-icons/lu";
 import { MdDelete } from "react-icons/md";
 import { HiPencil } from "react-icons/hi";
 import EditSubCategory from "../components/EditSubCategory";
+import ConfirmBox from "../components/ConfirmBox";
+import toast from "react-hot-toast";
 
 const SubCategoryPage = () => {
   const [openAddSubCategory, setOpenAddSubCategory] = useState(false);
@@ -21,6 +23,10 @@ const SubCategoryPage = () => {
   const [editData, setEditData] = useState({
     _id: "",
   });
+  const [deleteSubCategory, setDeleteSubCategory] = useState({
+    _id: "",
+  });
+  const [openDeleteConfirmBox, setOpenDeleteConfirmBox] = useState(false);
 
   const fetchSubCategory = async () => {
     try {
@@ -113,6 +119,26 @@ const SubCategoryPage = () => {
     }),
   ];
 
+  const handleDeleteSubCategory = async()=>{
+    try {
+        const response = await Axios({
+            ...SummaryApi.deleteSubcategory,
+            data : deleteSubCategory
+        })
+
+        const { data : responseData } = response
+
+        if(responseData.success){
+           toast.success(responseData.message)
+           fetchSubCategory()
+           setOpenDeleteConfirmBox(false)
+           setDeleteSubCategory({_id : ""})
+        }
+    } catch (error) {
+      AxiosToastError(error)
+    }
+}
+
   // console.log(data)
   return (
     <section>
@@ -129,7 +155,7 @@ const SubCategoryPage = () => {
         </button>
       </div>
 
-      <div>
+      <div className="overflow-auto w-full max-w-[100vw]">
         <DisplayTable data={data} column={column} />
       </div>
 
@@ -144,6 +170,14 @@ const SubCategoryPage = () => {
           data={editData}
           close={() => setOpenEdit(false)}
           fetchData={fetchSubCategory}
+        />
+      )}
+
+      {openDeleteConfirmBox && (
+        <ConfirmBox
+          cancel={() => setOpenDeleteConfirmBox(false)}
+          close={() => setOpenDeleteConfirmBox(false)}
+          confirm={handleDeleteSubCategory}
         />
       )}
     </section>
