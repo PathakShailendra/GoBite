@@ -211,3 +211,6 @@ const UploadSubCategoryModel = ({ close }) => {
 
 export default UploadSubCategoryModel;
 
+
+
+// video 4:46:59 hour ki ho gai hai and abhi tak hamne get subcategory wala controller bana liya hai and ab hame aage front end se usper call karke data fetch karwa ker display karwana he
