@@ -25,33 +25,33 @@ const CategoryPage = () => {
     _id: "",
   });
 
-  const allCategory = useSelector((state) => state.product.allCategory);
-
-  useEffect(() => {
-    setcategoryData(allCategory);
-  }, [allCategory]);
-
-
-  // const fetchCategory = async () => {
-  //   try {
-  //     setloading(true);
-  //     const response = await Axios({
-  //       ...SummaryApi.getCategory,
-  //     });
-
-  //     const { data: responseData } = response;
-  //     if (responseData.success) {
-  //       setcategoryData(responseData.data);
-  //     }
-  //   } catch (error) {
-  //   } finally {
-  //     setloading(false);
-  //   }
-  // };
+  // const allCategory = useSelector((state) => state.product.allCategory);
 
   // useEffect(() => {
-  //   fetchCategory();
-  // }, []);
+  //   setcategoryData(allCategory);
+  // }, [allCategory]);
+
+
+  const fetchCategory = async () => {
+    try {
+      setloading(true);
+      const response = await Axios({
+        ...SummaryApi.getCategory,
+      });
+
+      const { data: responseData } = response;
+      if (responseData.success) {
+        setcategoryData(responseData.data);
+      }
+    } catch (error) {
+    } finally {
+      setloading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
 
   const handleDeleteCategory = async () => {
     try {
