@@ -6,6 +6,9 @@ import SummaryApi from "../common/SummaryApi";
 import DisplayTable from "../components/DisplayTable";
 import { createColumnHelper } from '@tanstack/react-table'
 import ViewImage from "../components/ViewImage";
+import { LuPencil } from "react-icons/lu";
+import { MdDelete  } from "react-icons/md";
+import { HiPencil } from "react-icons/hi";
 
 const SubCategoryPage = () => {
   const [openAddSubCategory, setOpenAddSubCategory] = useState(false);
@@ -71,6 +74,27 @@ const SubCategoryPage = () => {
        )
       }
    }),
+   columnHelper.accessor("_id",{
+    header : "Action",
+    cell : ({row})=>{
+      return(
+        <div className='flex items-center justify-center gap-3'>
+            <button onClick={()=>{
+                setOpenEdit(true)
+                setEditData(row.original)
+            }} className='p-2 bg-green-100 rounded-full hover:text-green-600'>
+                <HiPencil size={20}/>
+            </button>
+            <button onClick={()=>{
+              setOpenDeleteConfirmBox(true)
+              setDeleteSubCategory(row.original)
+            }} className='p-2 bg-red-100 rounded-full text-red-500 hover:text-red-600'>
+                <MdDelete  size={20}/>
+            </button>
+        </div>
+      )
+    }
+  })
   ];  
 
   // console.log(data)
