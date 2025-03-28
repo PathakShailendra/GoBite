@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import uploadImage from "../utils/UploadImage";
 import Loading from "../components/Loading";
+import ViewImage from "../components/ViewImage";
 
 const UploadProduct = () => {
   const [data, setdata] = useState({
@@ -19,6 +20,7 @@ const UploadProduct = () => {
   });
 
   const [imageLoading, setImageLoading] = useState(false);
+  const [ViewImageUrl, setViewImageUrl] = useState("")
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -125,6 +127,7 @@ const UploadProduct = () => {
                         src={image}
                         alt={image}
                         className="w-full h-full object-scale-down"
+                        onClick={() => setViewImageUrl(image)}
                       />
                     </div>
                   );
@@ -134,6 +137,12 @@ const UploadProduct = () => {
           </div>
         </form>
       </div>
+
+      {
+        ViewImageUrl && (
+          <ViewImage url={ViewImageUrl} close={() => setViewImageUrl("")} />
+        )
+      }
     </section>
   );
 };

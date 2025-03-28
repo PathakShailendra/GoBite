@@ -13,3 +13,6 @@ const Loading = () => {
 };
 
 export default Loading;
+
+
+// video 6:33:03 hour ki ho chuki he aur ham abhi upload product ke ander image upload wala bana rhe he matlab image upload ho chuki he and ab ussy hi aage badhana he fir baad me sab kuch dheere dheere banaker final ek product upload karenge

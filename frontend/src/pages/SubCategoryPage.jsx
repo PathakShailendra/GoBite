@@ -5,7 +5,7 @@ import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import DisplayTable from "../components/DisplayTable";
 import { createColumnHelper } from "@tanstack/react-table";
-import ViewImage from "../components/ViewImage";
+import ViewImageSubCategory from "../components/ViewImageSubCategory";
 import { LuPencil } from "react-icons/lu";
 import { MdDelete } from "react-icons/md";
 import { HiPencil } from "react-icons/hi";
@@ -163,7 +163,7 @@ const SubCategoryPage = () => {
         <UploadSubCategoryModel close={() => setOpenAddSubCategory(false)} />
       )}
 
-      {ImageURL && <ViewImage data={ImageURL} close={() => setImageURL("")} />}
+      {ImageURL && <ViewImageSubCategory data={ImageURL} close={() => setImageURL("")} />}
 
       {openEdit && (
         <EditSubCategory
