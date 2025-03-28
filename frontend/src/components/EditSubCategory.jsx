@@ -56,7 +56,7 @@ const EditSubCategory = ({ close, data, fetchData }) => {
     e.preventDefault();
     try {
       const response = await Axios({
-        ...SummaryApi.updateSubcategory,
+        ...SummaryApi.updateSubCategory,
         data: subCategoryData,
       });
 

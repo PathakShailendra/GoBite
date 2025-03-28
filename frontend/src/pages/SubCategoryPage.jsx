@@ -32,7 +32,7 @@ const SubCategoryPage = () => {
     try {
       setLoading(true);
       const response = await Axios({
-        ...SummaryApi.getSubcategory,
+        ...SummaryApi.getSubCategory,
       });
 
       const { data: responseData } = response;
@@ -122,7 +122,7 @@ const SubCategoryPage = () => {
   const handleDeleteSubCategory = async()=>{
     try {
         const response = await Axios({
-            ...SummaryApi.deleteSubcategory,
+            ...SummaryApi.deleteSubCategory,
             data : deleteSubCategory
         })
 
