@@ -6,6 +6,7 @@ import ViewImage from "../components/ViewImage";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import AddFieldComponent from "../components/AddFieldComponent";
 
 const UploadProduct = () => {
   const [data, setdata] = useState({
@@ -26,10 +27,13 @@ const UploadProduct = () => {
   const [ViewImageUrl, setViewImageUrl] = useState("");
   const allCategory = useSelector((state) => state.product.allCategory);
   const [selectCategory, setselectCategory] = useState("");
-  const [selectSubCategory,setSelectSubCategory] = useState("")
-  const allSubCategory = useSelector(state => state.product.allSubCategory)
+  const [selectSubCategory, setSelectSubCategory] = useState("");
+  const allSubCategory = useSelector((state) => state.product.allSubCategory);
 
-  console.log(allSubCategory)
+  const [openAddField, setOpenAddField] = useState(false);
+  const [fieldName, setFieldName] = useState("");
+
+  // console.log(allSubCategory)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setdata((prev) => {
@@ -69,15 +73,36 @@ const UploadProduct = () => {
     });
   };
 
+  const handleAddField = () => {
+    setdata((prev) => {
+      return {
+        ...prev,
+        more_details: {
+          ...prev.more_details,
+          [fieldName]: "",
+        },
+      };
+    });
+    setFieldName("");
+    setOpenAddField(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(data)
+  };
+
   return (
     <section>
       <div className="p-2 bg-white shadow-md flex items-center justify-between">
         <h2 className="font-semibold">Upload Product</h2>
       </div>
       <div className="grid p-4">
-        <form className="grid gap-2">
+        <form className="grid gap-4" onSubmit={handleSubmit}>
           <div className="grid gap-1">
-            <label htmlFor="name">Name</label>
+            <label className="font-semibold" htmlFor="name">
+              Name
+            </label>
             <input
               type="text"
               name="name"
@@ -107,7 +132,7 @@ const UploadProduct = () => {
             />
           </div>
           <div>
-            <p>Image</p>
+            <p className="font-semibold">Image</p>
             <div>
               <label
                 htmlFor="productImage"
@@ -159,7 +184,7 @@ const UploadProduct = () => {
             </div>
           </div>
           <div className="grid gap-1">
-            <label>Category</label>
+            <label className="font-semibold">Category</label>
             <div>
               <select
                 className="bg-blue-50 border w-full p-2 rounded"
@@ -217,7 +242,7 @@ const UploadProduct = () => {
             </div>
           </div>
           <div className="grid gap-1">
-            <label>Sub Category</label>
+            <label className="font-semibold">Sub Category</label>
             <div>
               <select
                 className="bg-blue-50 border w-full p-2 rounded"
@@ -226,7 +251,9 @@ const UploadProduct = () => {
                 value={selectSubCategory}
                 onChange={(e) => {
                   const value = e.target.value;
-                  const subCategory = allSubCategory.find((c) => c._id === value);
+                  const subCategory = allSubCategory.find(
+                    (c) => c._id === value
+                  );
                   setdata((prev) => {
                     return {
                       ...prev,
@@ -274,14 +301,129 @@ const UploadProduct = () => {
               </div>
             </div>
           </div>
+          <div className="grid gap-1">
+            <label className="font-semibold" htmlFor="unit">
+              Unit
+            </label>
+            <input
+              type="text"
+              name="unit"
+              id="unit"
+              placeholder="Enter product unit"
+              value={data.unit}
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-[#D69CAA] rounded"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label className="font-semibold" htmlFor="stock">
+              Stock quantity
+            </label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              placeholder="Enter product stock"
+              value={data.stock}
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-[#D69CAA] rounded"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label className="font-semibold" htmlFor="price">
+              Price
+            </label>
+            <input
+              type="number"
+              name="price"
+              id="price"
+              placeholder="Enter product price"
+              value={data.price}
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-[#D69CAA] rounded"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label className="font-semibold" htmlFor="discount">
+              Discount
+            </label>
+            <input
+              type="number"
+              name="discount"
+              id="discount"
+              placeholder="Enter product discount"
+              value={data.discount}
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-[#D69CAA] rounded"
+            />
+          </div>
+
+          {/* Add more fields */}
+          {Object.keys(data.more_details)?.map((key, index) => {
+            return (
+              <div className="grid gap-1">
+                <label className="font-semibold" htmlFor={key}>
+                  {key}
+                </label>
+                <input
+                  type="text"
+                  id={key}
+                  value={data?.more_details[key]}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setdata((prev) => {
+                      return {
+                        ...prev,
+                        more_details: {
+                          ...prev.more_details,
+                          [key]: value,
+                        },
+                      };
+                    });
+                  }}
+                  required
+                  className="bg-blue-50 p-2 outline-none border focus-within:border-[#D69CAA] rounded"
+                />
+              </div>
+            );
+          })}
+          <div
+            onClick={() => setOpenAddField(true)}
+            className="inline-block w-31 mt-4 px-6 py-3 font-semibold text-white bg-gradient-to-r from-[#D69CAA] to-[#C08497] rounded-lg shadow-lg transition-all duration-500 ease-in-out hover:from-[#68AB95] hover:to-[#4C9C84] hover:shadow-xl active:scale-95 cursor-pointer"
+          >
+            Add Fields
+          </div>
+          <button
+            type="submit"
+            className="relative px-7 py-3 text-white font-semibold rounded-lg shadow-md 
+             bg-[#D69CAA] transition-all duration-300 
+             hover:bg-[#68AB95] hover:shadow-lg active:scale-95"
+          >
+            Submit
+          </button>
         </form>
       </div>
 
       {ViewImageUrl && (
         <ViewImage url={ViewImageUrl} close={() => setViewImageUrl("")} />
       )}
+
+      {openAddField && (
+        <AddFieldComponent
+          close={() => setOpenAddField(false)}
+          value={fieldName}
+          onChange={(e) => setFieldName(e.target.value)}
+          submit={handleAddField}
+        />
+      )}
     </section>
   );
 };
 
 export default UploadProduct;
+
+// Video 7:14:55 hour ki ho gyi he and abhi tak almost product create karne wala page ban hi gaya he bas ek last field add karna he add fields naam ki jisme more details add kar sakenge uske liye abhi button banaker rakh li he abhi uska kaam nahi kiya he ab next more details add karna he
