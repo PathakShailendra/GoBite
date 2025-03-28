@@ -3,6 +3,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import uploadImage from "../utils/UploadImage";
 import Loading from "../components/Loading";
 import ViewImage from "../components/ViewImage";
+import { MdDelete } from "react-icons/md";
 
 const UploadProduct = () => {
   const [data, setdata] = useState({
@@ -51,6 +52,15 @@ const UploadProduct = () => {
     });
     setImageLoading(false);
   };
+
+  const handleDeleteImage = async (index) => {
+    data.image.splice(index,1)
+      setdata((prev)=>{
+        return{
+            ...prev
+        }
+      })
+  }
 
   return (
     <section>
@@ -116,25 +126,30 @@ const UploadProduct = () => {
               </label>
 
               {/* display uploaded images */}
-              <div className="my-2">
+              <div className="my-2 flex flex-wrap gap-4">
                 {data.image.map((image, index) => {
                   return (
                     <div
                       key={image + index}
-                      className="h-20 w-20 min-w-20 bg-blue-50 border"
+                      className="h-20 w-20 min-w-20 bg-blue-50 border relative group"
                     >
                       <img
                         src={image}
                         alt={image}
-                        className="w-full h-full object-scale-down"
+                        className="w-full h-full object-scale-down cursor-pointer"
                         onClick={() => setViewImageUrl(image)}
                       />
+                      <div onClick={() => handleDeleteImage(index)} className="absolute bottom-[2px] right-[2px] p-1 bg-red-600 hover:bg-red-800 rounded-full text-white hidden group-hover:block cursor-pointer">
+                        <MdDelete size={20} />
+                      </div>
                     </div>
                   );
                 })}
               </div>
             </div>
           </div>
+
+          
         </form>
       </div>
 
