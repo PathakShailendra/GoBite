@@ -7,6 +7,10 @@ import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import AddFieldComponent from "../components/AddFieldComponent";
+import SummaryApi from "../common/SummaryApi";
+import Axios from "../utils/Axios";
+import AxiosToastError from "../utils/AxiosToastError";
+import successAlert from "../utils/SuccessAlert";
 
 const UploadProduct = () => {
   const [data, setdata] = useState({
@@ -89,7 +93,33 @@ const UploadProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data)
+    // console.log("data", data);
+
+    try {
+      const response = await Axios({
+        ...SummaryApi.createProduct,
+        data: data,
+      });
+      const { data: responseData } = response;
+
+      if (responseData.success) {
+        successAlert(responseData.message);
+        setdata({
+          name: "",
+          image: [],
+          category: [],
+          subCategory: [],
+          unit: "",
+          stock: "",
+          price: "",
+          discount: "",
+          description: "",
+          more_details: {},
+        });
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
   };
 
   return (
@@ -280,7 +310,7 @@ const UploadProduct = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-blue-100 px-3 py-1.5 flex items-center rounded-lg shadow-md hover:shadow-lg transition-all inline-flex"
+                    className="bg-blue-100 px-3 py-1.5 flex items-center rounded-lg shadow-md hover:shadow-lg transition-all"
                   >
                     <p className="text-gray-800 font-medium">{c.name}</p>
                     <motion.button

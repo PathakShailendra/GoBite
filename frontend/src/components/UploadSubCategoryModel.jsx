@@ -7,7 +7,7 @@ import SummaryApi from "../common/SummaryApi";
 import toast from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 
-const UploadSubCategoryModel = ({ close }) => {
+const UploadSubCategoryModel = ({ close, fetchData }) => {
   const [subCategoryData, setSubCategoryData] = useState({
     name: "",
     image: "",
@@ -64,6 +64,9 @@ const UploadSubCategoryModel = ({ close }) => {
         toast.success(responseData.message);
         if (close) {
           close();
+        }
+        if(fetchData) {
+          fetchData();
         }
       }
     } catch (error) {
@@ -211,3 +214,6 @@ const UploadSubCategoryModel = ({ close }) => {
 
 export default UploadSubCategoryModel;
 
+
+
+// video 8:40 hour ki ho gyi hai aur sare products sub category me add kar diye he ab aage ka kaam karna he
