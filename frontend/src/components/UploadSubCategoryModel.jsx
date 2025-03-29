@@ -215,5 +215,3 @@ const UploadSubCategoryModel = ({ close, fetchData }) => {
 export default UploadSubCategoryModel;
 
 
-
-// video 8:40 hour ki ho gyi hai aur sare products sub category me add kar diye he ab aage ka kaam karna he
