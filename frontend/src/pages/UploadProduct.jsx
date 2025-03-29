@@ -459,3 +459,5 @@ export default UploadProduct;
 
 
 // Abhi mene bas aata product ko add kar diya he as demo aur pure products ko add karna baki he ab bethker sare products ko add karna he but abhi me aage badha rha hu
+// besan sooji and maida bhi add kar diya he
+// ab apan sari main categories me se 1-1 product add kar denge wo kafi hoga abhi tak aata rice & dal add kar diya he
