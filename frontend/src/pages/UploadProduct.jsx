@@ -456,4 +456,6 @@ const UploadProduct = () => {
 
 export default UploadProduct;
 
-// Video 7:14:55 hour ki ho gyi he and abhi tak almost product create karne wala page ban hi gaya he bas ek last field add karna he add fields naam ki jisme more details add kar sakenge uske liye abhi button banaker rakh li he abhi uska kaam nahi kiya he ab next more details add karna he
+
+
+// Abhi mene bas aata product ko add kar diya he as demo aur pure products ko add karna baki he ab bethker sare products ko add karna he but abhi me aage badha rha hu
