@@ -53,45 +53,47 @@ export const createProductController = async(request,response)=>{
     }
 }
 
-export const getProductController = async(request,response)=>{
+export const getProductController = async (request, response) => {
     try {
-        
-        let { page, limit, search } = request.body 
+        let { page, limit, search } = request.body;
 
-        if(!page){
-            page = 1
-        }
+        if (!page) page = 1;
+        if (!limit) limit = 10;
 
-        if(!limit){
-            limit = 10
-        }
+        // Using regex for case-insensitive search
+        const query = search
+            ? {
+                  $or: [
+                      { name: { $regex: search, $options: "i" } }, // Case-insensitive search
+                      { description: { $regex: search, $options: "i" } }
+                  ]
+              }
+            : {};
 
-        const query = search ? {
-            $text : {
-                $search : search
-            }
-        } : {}
+        const skip = (page - 1) * limit;
 
-        const skip = (page - 1) * limit
-
-        const [data,totalCount] = await Promise.all([
-            ProductModel.find(query).sort({createdAt : -1 }).skip(skip).limit(limit).populate('category subCategory'),
+        const [data, totalCount] = await Promise.all([
+            ProductModel.find(query)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .populate("category subCategory"),
             ProductModel.countDocuments(query)
-        ])
+        ]);
 
         return response.json({
-            message : "Product data",
-            error : false,
-            success : true,
-            totalCount : totalCount,
-            totalNoPage : Math.ceil( totalCount / limit),
-            data : data
-        })
+            message: "Product data",
+            error: false,
+            success: true,
+            totalCount: totalCount,
+            totalNoPage: Math.ceil(totalCount / limit),
+            data: data
+        });
     } catch (error) {
         return response.status(500).json({
-            message : error.message || error,
-            error : true,
-            success : false
-        })
+            message: error.message || error,
+            error: true,
+            success: false
+        });
     }
-}
+};
