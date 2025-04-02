@@ -10,3 +10,7 @@ body{
       }
     @apply bg-blue-50;
 }
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

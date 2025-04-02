@@ -11,7 +11,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const loadingCardNumber = new Array(6).fill(null);
-  const containerRef = useRef(); 
+  const containerRef = useRef();
 
   const fetchCategoryWiseProduct = async () => {
     try {
@@ -26,7 +26,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
       if (responseData.success) {
         setData(responseData.data);
       }
-      console.log(responseData);
+      //   console.log(responseData);
     } catch (error) {
       AxiosToastError(error);
     } finally {
@@ -39,12 +39,12 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   }, []);
 
   const handleScrollRight = () => {
-    containerRef.current.scrollLeft += 200
-}
+    containerRef.current.scrollLeft += 200;
+  };
 
-const handleScrollLeft = () => {
-    containerRef.current.scrollLeft -= 200
-}
+  const handleScrollLeft = () => {
+    containerRef.current.scrollLeft -= 200;
+  };
 
   return (
     <div>
@@ -54,23 +54,27 @@ const handleScrollLeft = () => {
           See All
         </Link>
       </div>
-      <div className="flex items-center gap-4 md:gap-6 lg:gap-8 container mx-auto px-4 overflow-hidden scroll-smooth" ref={containerRef}>
-        {loading &&
-          loadingCardNumber.map((_, index) => {
+      <div className="relative flex items-center">
+        <div
+          className="flex gap-4 md:gap-6 lg:gap-8 container mx-auto px-4 overflow-x-scroll scrollbar-none scroll-smooth"
+          ref={containerRef}
+        >
+          {loading &&
+            loadingCardNumber.map((_, index) => {
+              return (
+                <CardLoading key={"CategorywiseProductDisplay123" + index} />
+              );
+            })}
+
+          {data.map((p, index) => {
             return (
-              <CardLoading key={"CategorywiseProductDisplay123" + index} />
+              <CardProduct
+                data={p}
+                key={p._id + "categorywiseproductdisplay" + index}
+              />
             );
           })}
-
-        {data.map((p, index) => {
-          return (
-            <CardProduct
-              data={p}
-              key={p._id + "categorywiseproductdisplay" + index}
-            />
-          );
-        })}
-
+        </div>
         <div className="w-full left-0 right-0 container mx-auto  px-2  absolute hidden lg:flex justify-between">
           <button
             onClick={handleScrollLeft}
