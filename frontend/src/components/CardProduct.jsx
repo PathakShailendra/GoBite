@@ -32,7 +32,7 @@ const CardProduct = ({ data }) => {
       {/* Price & Add Button Section */}
       <div className="px-2 lg:px-0 flex items-center justify-between gap-1 lg:gap-2 text-xs lg:text-sm">
         {/* Price */}
-        <div className="font-semibold text-green-700 text-sm lg:text-base">
+        <div className="font-semibold text-black text-sm lg:text-base">
           {DisplayPriceInRupees(data.price)}
         </div>
         {/* Add Button */}

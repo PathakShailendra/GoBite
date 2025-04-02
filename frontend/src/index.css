@@ -14,3 +14,23 @@ body{
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+.scrollbarCustom::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+.scrollbarCustom::-webkit-scrollbar-track {
+  background: #c8dbec; /* Lighter shade of #D69CAA */
+  border-radius: 10px;
+}
+
+.scrollbarCustom::-webkit-scrollbar-thumb {
+  background: #6fabd0; 
+  border-radius: 10px;
+  border: 2px solid #F3E6EC; /* Adding a border to make thumb look soft */
+}
+
+.scrollbarCustom::-webkit-scrollbar-thumb:hover {
+  background: #008236; /* Slightly darker shade on hover */
+}
