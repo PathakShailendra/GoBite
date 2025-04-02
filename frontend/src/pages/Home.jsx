@@ -2,8 +2,9 @@ import React from "react";
 import banner from "../assets/banner.jpg";
 import bannerMobile from "../assets/banner-mobile.jpg";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { valideURLConvert } from "../utils/validURLConvert";
+import CategoryWiseProductDisplay from "../components/CategoryWiseProductDisplay";
 
 const Home = () => {
   const loadingCategory = useSelector((state) => state.product.loadingCategory);
@@ -25,6 +26,8 @@ const Home = () => {
     const url = `/${valideURLConvert(cat)}-${id}/${valideURLConvert(subcategory.name)}-${subcategory._id}`
     navigate(url)
   }
+
+  
 
   return (
     <section className="bg-white">
@@ -66,9 +69,19 @@ const Home = () => {
               );
             })}
       </div>
+
+      {/* Diaplay category product */}
+      {
+        categoryData.map((c, index) => {
+          return (
+            <CategoryWiseProductDisplay key={c?._id+"categorywiseproduct"} id={c?._id} name={c?.name} />
+          )
+        })
+      }
     </section>
   );
 };
 
 export default Home;
 
+  
