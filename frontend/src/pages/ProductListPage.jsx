@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import AxiosToastError from "../utils/AxiosToastError";
 import Loading from "../components/Loading";
 import CardProduct from "../components/CardProduct";
 import { useSelector } from "react-redux";
+import { valideURLConvert } from "../utils/validURLConvert";
 
 const ProductListPage = () => {
   const [data, setData] = useState([]);
@@ -75,10 +76,12 @@ const ProductListPage = () => {
     <section className="mt-7 lg:mt-0 sticky top-24 lg:top-20">
       <div className="container sticky mx-auto grid grid-cols-[90px_1fr] md:grid-cols-[200px_1fr] lg:grid-cols-[280px_1fr]">
         {/* Sub category */}
-        <div className="min-h-[80vh] max-h-[80vh] overflow-y-scroll lg:py-4 p-2 flex flex-col gap-1 shadow-md scrollbarCustom bg-white py-2">
+        <div className="min-h-[88vh] max-h-[88vh] overflow-y-scroll lg:py-4 p-2 flex flex-col gap-1 shadow-md scrollbarCustom bg-white py-2">
           {DisplaySubCategory.map((s, index) => {
+            const link = `/${valideURLConvert(s?.category[0]?.name)}-${s?.category[0]?._id}/${valideURLConvert(s.name)}-${s._id}`
             return (
-              <div
+              <Link
+              to={link}
               key={s._id+index+"displaySubCategory"}
                 className={`w-full p-2 ${
                   subCategoryId === s._id
@@ -96,18 +99,18 @@ const ProductListPage = () => {
                 <p className="-mt-6 lg:mt-0 leading-none text-center lg:text-lg lg:text-left">
                   {s.name}
                 </p>
-              </div>
+              </Link>
             );
           })}
         </div>
 
         {/* Product */}
-        <div className="">
-          <div className="bg-white shadow-md p-4">
+        <div className="sticky top-20">
+          <div className="bg-white shadow-md p-4 z-10">
             <h3 className="font-semibold">{subCategoryName}</h3>
           </div>
 
-          <div>
+          <div className="min-h-[80vh] max-h-[80vh] overflow-y-auto relative">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 p-4 gap-4 justify-items-center lg:justify-items-start">
               {data.map((p, index) => {
                 return (
