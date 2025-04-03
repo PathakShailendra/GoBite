@@ -68,7 +68,7 @@ const ProductListPage = () => {
       return filterData ? filterData : null;
     });
     setDisplaySubCategory(sub);
-    console.log(sub);
+    // console.log(sub);
   }, [params, allSubCategory]);
 
   return (
@@ -79,6 +79,7 @@ const ProductListPage = () => {
           {DisplaySubCategory.map((s, index) => {
             return (
               <div
+              key={s._id+index+"displaySubCategory"}
                 className={`w-full p-2 ${
                   subCategoryId === s._id
                     ? "bg-green-300"
@@ -127,5 +128,3 @@ const ProductListPage = () => {
 };
 
 export default ProductListPage;
-
-// video 2:37 min cmpleted and one error is coming wo check kar lena kaha aa rha he
