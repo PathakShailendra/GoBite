@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import EditProductAdmin from './EditProductAdmin'
+import EditProductAdmin from './EditProductAdmin'
 // import CofirmBox from './CofirmBox'
 import { IoClose } from "react-icons/io5";
 import SummaryApi from "../common/SummaryApi";
@@ -37,9 +37,11 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
   //       AxiosToastError(error);
   //     }
   //   };
-
+// hover:scale-102 hover:shadow-lg
   return (
-    <div className="w-40 h-64 rounded-lg shadow-md overflow-hidden bg-white transition-transform duration-300 hover:scale-102 hover:shadow-lg flex flex-col justify-between">
+    <div className={`w-40 h-64 rounded-lg shadow-md overflow-hidden bg-white transition-transform duration-300 flex flex-col justify-between ${
+      !editOpen ? 'hover:scale-105 hover:shadow-lg' : ''
+    }`}>
       {/* Image Section */}
       <div className="w-full h-48 flex items-center justify-center overflow-hidden">
         <img
@@ -74,7 +76,7 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
         </button>
       </div>
 
-      {/* 
+      
   {editOpen && (
     <EditProductAdmin
       fetchProductData={fetchProductData}
@@ -82,7 +84,7 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
       close={() => setEditOpen(false)}
     />
   )} 
-  */}
+ 
 
       {openDelete && (
         <section className="fixed top-0 left-0 right-0 bottom-0 bg-neutral-600 z-50 bg-opacity-70 p-4 flex justify-center items-center">

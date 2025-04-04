@@ -186,23 +186,55 @@ export const getProductByCategoryAndSubCategory = async (req, res) => {
 
 export const getProductDetails = async (req, res) => {
   try {
-    const { productId } = req.body 
+    const { productId } = req.body;
 
-    const product = await ProductModel.findOne({ _id : productId })
-
+    const product = await ProductModel.findOne({ _id: productId });
 
     return res.status(200).json({
-        message : "product details",
-        data : product,
-        error : false,
-        success : true
-    })
-
-} catch (error) {
+      message: "product details",
+      data: product,
+      error: false,
+      success: true,
+    });
+  } catch (error) {
     return res.status(500).json({
-        message : error.message || error,
-        error : true,
-        success : false
-    })
-}
-}
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+};
+
+export const updateProductDetails = async (req, res) => {
+  try {
+    const { _id } = req.body;
+
+    if (!_id) {
+      return res.status(400).json({
+        message: "provide product _id",
+        error: true,
+        success: false,
+      });
+    }
+
+    const updateProduct = await ProductModel.updateOne(
+      { _id: _id },
+      {
+        ...req.body,
+      }
+    );
+
+    return res.status(200).json({
+      message: "updated successfully",
+      data: updateProduct,
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+};

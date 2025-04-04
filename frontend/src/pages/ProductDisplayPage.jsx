@@ -6,7 +6,9 @@ import AxiosToastError from "../utils/AxiosToastError";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import Divider from "../components/Divider";
-
+import image1 from "../assets/minute_delivery.png";
+import image2 from "../assets/Best_Prices_Offers.png";
+import image3 from "../assets/Wide_Assortment.png";
 const ProductDisplayPage = () => {
   const params = useParams();
   let productId = params?.product?.split("-")?.slice(-1)[0];
@@ -50,8 +52,12 @@ const ProductDisplayPage = () => {
     imageContainer.current.scrollLeft -= 100;
   };
 
+  console.log(data);
+
   return (
     <section className="container mx-auto mt-4 p-4 grid lg:grid-cols-2">
+      {/* first */}
+
       <div className=" ">
         <div className=" lg:min-h-[65vh] lg:max-h-[65vh] rounded min-h-52 max-h-52 h-full w-full">
           <img
@@ -110,8 +116,11 @@ const ProductDisplayPage = () => {
             </button>
           </div>
         </div>
+
+        <div>{}</div>
       </div>
 
+      {/* second */}
       <div className="p-4 lg:pl-7 text-base lg:text-lg">
         <p className="bg-green-300 w-fit px-2 rounded-full mb-1">10 min</p>
         <h2 className="text-lg font-semibold lg:text-3xl">{data.name}</h2>
@@ -120,15 +129,55 @@ const ProductDisplayPage = () => {
         <div>
           <p className="">Price</p>
           <div className="border border-green-600 px-4 py-2 rounded bg-green-50 w-fit">
-            <p className="font-semibold text-lg lg:text-xl">{DisplayPriceInRupees(data.price)}</p>
+            <p className="font-semibold text-lg lg:text-xl">
+              {DisplayPriceInRupees(data.price)}
+            </p>
           </div>
         </div>
 
-        <button className="my-4 px-4 py-1 bg-green-700 hover:bg-green-700 text-white rounded shadow-md">
-          Add
-        </button>
+        {data.stock === 0 ? (
+          <p className="text-lg text-red-500">Out of Stock</p>
+        ) : (
+          <button className="my-4 px-4 py-1 bg-green-700 hover:bg-green-700 text-white rounded shadow-md">
+            Add
+          </button>
+        )}
 
-        <Divider />
+        <h2 className="font-semibold">Why shop from GoBite ?</h2>
+        <div>
+          <div className="flex items-center gap-4 my-4">
+            <img src={image1} alt="super fast delivery" className="w-20 h-20" />
+            <div className="text-sm ">
+              <div className="font-semibold">Superfast Delivery</div>
+              <p>
+                Get yout order delivered to your doorstep at the earliest from
+                dark stores near you.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 my-4">
+            <img src={image2} alt="Best price offers" className="w-20 h-20" />
+            <div className="text-sm ">
+              <div className="font-semibold">Best Price & Offers</div>
+              <p>
+                Best price destination with offers directly from the
+                nanufacturers.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 my-4">
+            <img src={image3} alt="Wide Assortment" className="w-20 h-20" />
+            <div className="text-sm ">
+              <div className="font-semibold">Wide Assortment</div>
+              <p>
+                Choose from 5000+ products across food personal care, household
+                & other categories.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
