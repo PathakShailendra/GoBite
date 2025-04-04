@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import EditProductAdmin from './EditProductAdmin'
-// import CofirmBox from './CofirmBox'
+import EditProductAdmin from "./EditProductAdmin";
+import CofirmBox from "./ConfirmBox";
 import { IoClose } from "react-icons/io5";
 import SummaryApi from "../common/SummaryApi";
 import Axios from "../utils/Axios";
@@ -15,33 +15,35 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
     setOpenDelete(false);
   };
 
-  //   const handleDelete = async () => {
-  //     try {
-  //       const response = await Axios({
-  //         ...SummaryApi.deleteProduct,
-  //         data: {
-  //           _id: data._id,
-  //         },
-  //       });
+    const handleDelete = async () => {
+      try {
+        const response = await Axios({
+          ...SummaryApi.deleteProduct,
+          data: {
+            _id: data._id,
+          },
+        });
 
-  //       const { data: responseData } = response;
+        const { data: responseData } = response;
 
-  //       if (responseData.success) {
-  //         toast.success(responseData.message);
-  //         if (fetchProductData) {
-  //           fetchProductData();
-  //         }
-  //         setOpenDelete(false);
-  //       }
-  //     } catch (error) {
-  //       AxiosToastError(error);
-  //     }
-  //   };
-// hover:scale-102 hover:shadow-lg
+        if (responseData.success) {
+          toast.success(responseData.message);
+          if (fetchProductData) {
+            fetchProductData();
+          }
+          setOpenDelete(false);
+        }
+      } catch (error) {
+        AxiosToastError(error);
+      }
+    };
+  
   return (
-    <div className={`w-40 h-64 rounded-lg shadow-md overflow-hidden bg-white transition-transform duration-300 flex flex-col justify-between ${
-      !editOpen ? 'hover:scale-105 hover:shadow-lg' : ''
-    }`}>
+    <div
+    className={`w-40 h-64 rounded-lg shadow-md overflow-hidden bg-white transition-transform duration-300 flex flex-col justify-between ${
+      !editOpen && !openDelete ? "hover:scale-105 hover:shadow-lg" : ""
+    }`}
+    >
       {/* Image Section */}
       <div className="w-full h-48 flex items-center justify-center overflow-hidden">
         <img
@@ -56,7 +58,9 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
         <p className="text-sm text-center font-semibold text-gray-700 line-clamp-2">
           {data?.name}
         </p>
-        <p className="text-sm text-center text-gray-600 font-medium mt-1">{data?.unit}</p>{" "}
+        <p className="text-sm text-center text-gray-600 font-medium mt-1">
+          {data?.unit}
+        </p>{" "}
         {/* Increased Font Size & Left Align */}
       </div>
 
@@ -76,36 +80,49 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
         </button>
       </div>
 
-      
-  {editOpen && (
-    <EditProductAdmin
-      fetchProductData={fetchProductData}
-      data={data}
-      close={() => setEditOpen(false)}
-    />
-  )} 
- 
+      {editOpen && (
+        <EditProductAdmin
+          fetchProductData={fetchProductData}
+          data={data}
+          close={() => setEditOpen(false)}
+        />
+      )}
 
       {openDelete && (
-        <section className="fixed top-0 left-0 right-0 bottom-0 bg-neutral-600 z-50 bg-opacity-70 p-4 flex justify-center items-center">
-          <div className="bg-white p-4 w-full max-w-md rounded-md">
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="font-semibold">Permanent Delete</h3>
-              <button onClick={() => setOpenDelete(false)}>
-                <IoClose size={25} />
+        <section className="fixed inset-0 z-50 bg-neutral-800/70 p-4 flex justify-center items-center animate-fadeIn">
+          <div className="bg-white w-full max-w-md p-5 rounded-lg shadow-lg animate-slideUp">
+            {/* Header */}
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-bold text-gray-800">
+                Permanent Delete
+              </h3>
+              <button
+                onClick={() => setOpenDelete(false)}
+                className="p-2 rounded-full transition-all duration-300 hover:bg-gray-200 active:scale-90"
+              >
+                <IoClose
+                  size={25}
+                  className="text-gray-700 hover:text-red-500 transition-colors"
+                />
               </button>
             </div>
-            <p className="my-2">Are you sure you want to delete permanently?</p>
-            <div className="flex justify-end gap-5 py-4">
+
+            {/* Message */}
+            <p className="my-5 text-gray-700 text-base">
+              Are you sure you want to delete permanently?
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4">
               <button
                 onClick={handleDeleteCancel}
-                className="border px-3 py-1 rounded bg-[#D69CAA] border-[#AD6F83] text-[#AD6F83] hover:bg-[#AD6F83] hover:text-white"
+                className="px-5 py-2 border rounded border-[#D69CAA] text-[#D69CAA] font-medium transition-all duration-300 hover:bg-[#D69CAA] hover:text-white hover:shadow-md active:scale-95"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="border px-3 py-1 rounded bg-[#68AB95] border-[#4F8273] text-white hover:bg-[#4F8273]"
+                className="px-5 py-2 border rounded border-[#68AB95] text-[#68AB95] font-medium transition-all duration-300 hover:bg-[#68AB95] hover:text-white hover:shadow-md active:scale-95"
               >
                 Delete
               </button>
@@ -118,7 +135,6 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
 };
 
 export default ProductCardAdmin;
-
 
 // 3rd video khtm ho gyi he and ui update karna baki he and usme product wala ui update ho gaya he thoda search bar wala and neeche wala jo bar he uska update karna baki he
 
