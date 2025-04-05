@@ -27,6 +27,49 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
+  const updateCartItem = async(id,qty)=>{
+    try {
+        const response = await Axios({
+          ...SummaryApi.updateCartItemQty,
+          data : {
+            _id : id,
+            qty : qty
+          }
+        })
+        const { data : responseData } = response
+
+        if(responseData.success){
+            // toast.success(responseData.message)
+            fetchCartItem()
+            return responseData
+        }
+    } catch (error) {
+      AxiosToastError(error)
+      return error
+    }
+  }
+
+
+  const deleteCartItem = async(cartId)=>{
+    try {
+        const response = await Axios({
+          // ...SummaryApi.deleteCartItem,
+          data : {
+            _id : cartId
+          }
+        })
+        const { data : responseData} = response
+
+        if(responseData.success){
+          toast.success(responseData.message)
+          fetchCartItem()
+        }
+    } catch (error) {
+       AxiosToastError(error)
+    }
+  }
+
+
   useEffect(() => {
     fetchCartItem();
   }, []);
@@ -35,6 +78,7 @@ const GlobalProvider = ({ children }) => {
     <GlobalContext.Provider
       value={{
         fetchCartItem,
+        updateCartItem
       }}
     >
       {children}
