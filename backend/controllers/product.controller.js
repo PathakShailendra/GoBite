@@ -272,20 +272,19 @@ export const searchProduct = async (req, res) => {
   try {
     let { search, page, limit } = req.body;
 
-    if (!page) {
-      page = 1;
-    }
-    if (!limit) {
-      limit = 10;
-    }
+    if (!page) page = 1;
+    if (!limit) limit = 10;
 
-    const query = search
-      ? {
-          $text: {
-            $search: search,
-          },
-        }
-      : {};
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+        ],
+      };
+    }
 
     const skip = (page - 1) * limit;
 

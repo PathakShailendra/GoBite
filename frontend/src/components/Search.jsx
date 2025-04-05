@@ -19,15 +19,24 @@ const Search = () => {
     navigate("/search");
   };
 
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const url = `/search?q=${value}`;
+    navigate(url);
+  };
+
   return (
-    <div className="w-full min-w-[300px] lg:min-w-[420px] h-10 lg:h-12 rounded-lg border  overflow-hidden flex items-center text-neutral-500 bg-slate-50 group focus-within:border-[#ffbf00]">
+    <div className="w-full min-w-[300px] lg:min-w-[420px] h-10 lg:h-12 rounded-lg border  overflow-hidden flex items-center text-neutral-500 bg-slate-50 group focus-within:border-[#D69CAA]">
       <div>
         {isMobile && isSearchPage ? (
-          <Link to={"/"} className="flex justify-center items-center h-full p-2 m-1 group-focus-within:text-[#ffbf00] bg-white rounded-full shadow-md">
+          <Link
+            to={"/"}
+            className="flex justify-center items-center h-full p-2 m-1 group-focus-within:text-[#D69CAA] bg-white rounded-full shadow-md"
+          >
             <FaArrowLeft />
           </Link>
         ) : (
-          <button className="flex justify-center items-center h-full p-3 group-focus-within:text-[#ffbf00]">
+          <button className="flex justify-center items-center h-full p-3 group-focus-within:text-[#D69CAA]">
             <IoSearch size={22} />
           </button>
         )}
@@ -73,6 +82,7 @@ const Search = () => {
               placeholder="search for atta dal and more"
               autoFocus={true}
               className="bg-transparent w-full h-full outline-none"
+              onChange={handleChange}
             />
           </div>
         )}
