@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/GO_BITE_LOGO.svg";
 import Search from "./Search";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
 import UserMenu from "./UserMenu";
+import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 
 const Header = () => {
   const [isMobile] = useMobile();
@@ -17,8 +18,9 @@ const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
   const [openUserMenu, setopenUserMenu] = useState(false);
-  
-  
+  const cartItem = useSelector((state) => state?.cartItem?.cart);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalQty, setTotalQty] = useState(0);
 
   const redirectToLoginPage = () => {
     navigate("/login");
@@ -36,6 +38,20 @@ const Header = () => {
 
     navigate("/user");
   };
+
+  //total items and total price
+
+  useEffect(() => {
+    const qty = cartItem.reduce((preve, curr) => {
+      return preve + curr.quantity;
+    }, 0);
+    setTotalQty(qty);
+
+    const tPrice = cartItem.reduce((preve, curr) => {
+      return preve + curr.productId.price * curr.quantity;
+    }, 0);
+    setTotalPrice(tPrice);
+  }, [cartItem]);
 
   return (
     <header className="h-24 lg:h-20 sticky lg:shadow-md top-0 z-40 flex justify-center flex-col gap-1 bg-white">
@@ -114,7 +130,14 @@ const Header = () => {
                   <FaCartShopping size={28} />
                 </div>
                 <div className="font-semibold">
-                  <p> My cart </p>
+                  {cartItem[0] ? (
+                    <div>
+                      <p>{totalQty} items</p>
+                      <p>{DisplayPriceInRupees(totalPrice)}</p>
+                    </div>
+                  ) : (
+                    <p> My cart </p>
+                  )}
                 </div>
               </button>
             </div>

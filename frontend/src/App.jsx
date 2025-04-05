@@ -6,10 +6,16 @@ import toast, { Toaster } from "react-hot-toast";
 import fetchUserDetails from "./utils/fetchUserDetails";
 import { setUserDetails } from "./store/userSlice";
 import { useDispatch } from "react-redux";
-import { setAllCategory, setAllSubCategory, setLoadingCategory } from "./store/productSlice";
+import {
+  setAllCategory,
+  setAllSubCategory,
+  setLoadingCategory,
+} from "./store/productSlice";
 import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
 import AxiosToastError from "./utils/AxiosToastError";
+import { handleAddItemCart } from "./store/cartProduct";
+import GlobalProvider from "./provider/GlobalProvider";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -21,7 +27,7 @@ const App = () => {
 
   const fetchCategory = async () => {
     try {
-      dispatch(setLoadingCategory(true))
+      dispatch(setLoadingCategory(true));
       const response = await Axios({
         ...SummaryApi.getCategory,
       });
@@ -32,58 +38,44 @@ const App = () => {
       }
     } catch (error) {
     } finally {
-      dispatch(setLoadingCategory(false))
+      dispatch(setLoadingCategory(false));
     }
   };
 
-  const fetchSubCategory = async()=>{
-    try {
-        const response = await Axios({
-            ...SummaryApi.getSubCategory
-        })
-        const { data : responseData } = response
-
-        if(responseData.success){
-           dispatch(setAllSubCategory(responseData.data.sort((a, b) => a.name.localeCompare(b.name)))) 
-        }
-    } catch (error) {
-        
-    }finally{
-    }
-  }
-
-  const fetchCartItem = async () => {
+  const fetchSubCategory = async () => {
     try {
       const response = await Axios({
-        ...SummaryApi.getCartItem,
+        ...SummaryApi.getSubCategory,
       });
-
       const { data: responseData } = response;
+
       if (responseData.success) {
-        // dispatch(setAllCategory(responseData.data));
-        console.log(responseData);
+        dispatch(
+          setAllSubCategory(
+            responseData.data.sort((a, b) => a.name.localeCompare(b.name))
+          )
+        );
       }
     } catch (error) {
-      AxiosToastError(error);
+    } finally {
     }
-  }; 
+  };
 
   useEffect(() => {
     fetchUser();
     fetchCategory();
     fetchSubCategory();
-    fetchCartItem();
   }, []);
 
   return (
-    <>
+    <GlobalProvider>
       <Header />
       <main className="min-h-[80vh]">
         <Outlet />
       </main>
       <Footer />
       <Toaster />
-    </>
+    </GlobalProvider>
   );
 };
 
