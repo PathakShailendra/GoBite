@@ -1,11 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { Link } from "react-router-dom";
 import { valideURLConvert } from "../utils/validURLConvert";
 import { pricewithDiscount } from "../utils/PriceWithDiscount";
+import SummaryApi from "../common/SummaryApi";
+import AxiosToastError from "../utils/AxiosToastError";
+import Axios from "../utils/Axios";
+import toast from "react-hot-toast";
 
 const CardProduct = ({ data }) => {
   const url = `/product/${valideURLConvert(data.name)}-${data._id}`;
+  const [loading,setLoading] = useState(false)
+
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent the click event from propagating to the Link component
+    try {
+      setLoading(true);
+      const response = await Axios({
+        ...SummaryApi.addToCart,
+        data: {
+          productId: data?._id,
+        },
+      })
+      const { data: responseData } = response;
+      if (responseData.success) {
+        toast.success(responseData.message);
+      }
+
+      
+    } catch (error) {
+      AxiosToastError(error);
+    } finally {
+      setLoading(false)
+    }
+   
+  }
+
   return (
     <Link
       to={url}
@@ -58,7 +89,7 @@ const CardProduct = ({ data }) => {
 
         {/* Add Button */}
         {data.stock > 0 && (
-          <button className="bg-green-600 hover:bg-green-700 text-white px-2 lg:px-3 py-1 rounded-md shadow-md transition-all duration-300 transform hover:scale-102 text-xs lg:text-sm">
+          <button onClick={handleAddToCart} className="bg-green-600 hover:bg-green-700 text-white px-2 lg:px-3 py-1 rounded-md shadow-md transition-all duration-300 transform hover:scale-102 text-xs lg:text-sm">
             Add
           </button>
         )}
