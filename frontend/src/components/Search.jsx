@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { TypeAnimation } from "react-type-animation";
 import { FaArrowLeft } from "react-icons/fa";
 import useMobile from "../hooks/useMobile";
@@ -10,6 +10,8 @@ const Search = () => {
   const location = useLocation();
   const [isSearchPage, setIsSearchPage] = useState(false);
   const [isMobile] = useMobile();
+  const params = useLocation();
+  const searchText = params.search.slice(3);
 
   useEffect(() => {
     const isSearch = location.pathname === "/search";
@@ -80,6 +82,7 @@ const Search = () => {
             <input
               type="text"
               placeholder="search for atta dal and more"
+              defaultValue={searchText}
               autoFocus={true}
               className="bg-transparent w-full h-full outline-none"
               onChange={handleChange}

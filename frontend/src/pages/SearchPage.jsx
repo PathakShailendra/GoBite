@@ -52,7 +52,7 @@ const SearchPage = () => {
     fetchData();
   }, [page, searchText]);
 
-  
+
   useEffect(() => {
     setPage(1);
   }, [searchText]);
@@ -122,6 +122,7 @@ const SearchPage = () => {
             </div>
           )
         }
+        
       </div>
     </section>
   );

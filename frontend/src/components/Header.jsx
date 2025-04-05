@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../assets/GO_BITE_LOGO.svg";
 import Search from "./Search";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaRegCircleUser } from "react-icons/fa6";
 import useMobile from "../hooks/useMobile";
 import { FaCartShopping } from "react-icons/fa6";
@@ -17,6 +17,8 @@ const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
   const [openUserMenu, setopenUserMenu] = useState(false);
+  
+  
 
   const redirectToLoginPage = () => {
     navigate("/login");
@@ -32,8 +34,7 @@ const Header = () => {
       return;
     }
 
-    navigate('/user')
-
+    navigate("/user");
   };
 
   return (
