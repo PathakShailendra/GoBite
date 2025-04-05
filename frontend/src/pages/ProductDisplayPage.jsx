@@ -118,7 +118,27 @@ const ProductDisplayPage = () => {
           </div>
         </div>
 
-        <div>{}</div>
+        <div className="my-4 grid gap-2 lg:gap-4">
+          <div>
+            <p className="font-semibold">Description</p>
+            <p className="text-sm">{data.description}</p>
+          </div>
+
+          <div>
+            <p className="font-semibold">Unit</p>
+            <p className="text-sm">{data.unit}</p>
+          </div>
+
+          {data?.more_details &&
+            Object.keys(data?.more_details).map((element, index) => {
+              return (
+                <div>
+                  <p className="font-semibold">{element}</p>
+                  <p className="text-base">{data?.more_details[element]}</p>
+                </div>
+              );
+            })}
+        </div>
       </div>
 
       {/* second */}
@@ -137,19 +157,18 @@ const ProductDisplayPage = () => {
                 )}
               </p>
             </div>
-            {
-              data.discount > 0 && (
-                <p className="text-lg font-semibold text-gray-500 line-through">
-                  {DisplayPriceInRupees(data.price)}
-                </p>
-              )
-            }
-            
-            {
-              data.discount > 0 && (
-                <p className=" font-bold text-green-600 text-lg lg:text-2xl">{data.discount}% <span className="text-base text-neutral-500">Discount</span></p>
-              )
-            }
+            {data.discount > 0 && (
+              <p className="text-lg font-semibold text-gray-500 line-through">
+                {DisplayPriceInRupees(data.price)}
+              </p>
+            )}
+
+            {data.discount > 0 && (
+              <p className=" font-bold text-green-600 text-lg lg:text-2xl">
+                {data.discount}%{" "}
+                <span className="text-base text-neutral-500">Discount</span>
+              </p>
+            )}
           </div>
         </div>
 
