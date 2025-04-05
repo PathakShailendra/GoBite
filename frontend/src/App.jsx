@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setAllCategory, setAllSubCategory, setLoadingCategory } from "./store/productSlice";
 import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
+import AxiosToastError from "./utils/AxiosToastError";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -51,10 +52,27 @@ const App = () => {
     }
   }
 
+  const fetchCartItem = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.getCartItem,
+      });
+
+      const { data: responseData } = response;
+      if (responseData.success) {
+        // dispatch(setAllCategory(responseData.data));
+        console.log(responseData);
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  }; 
+
   useEffect(() => {
     fetchUser();
     fetchCategory();
     fetchSubCategory();
+    fetchCartItem();
   }, []);
 
   return (
