@@ -298,7 +298,7 @@ export const searchProduct = async (req, res) => {
       ProductModel.countDocuments(query),
     ]);
 
-    return res.json({
+    return res.status(200).json({
       message: "Product data",
       error: false,
       success: true,
