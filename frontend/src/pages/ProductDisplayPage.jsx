@@ -9,6 +9,7 @@ import Divider from "../components/Divider";
 import image1 from "../assets/minute_delivery.png";
 import image2 from "../assets/Best_Prices_Offers.png";
 import image3 from "../assets/Wide_Assortment.png";
+import { pricewithDiscount } from "../utils/PriceWithDiscount";
 const ProductDisplayPage = () => {
   const params = useParams();
   let productId = params?.product?.split("-")?.slice(-1)[0];
@@ -52,7 +53,7 @@ const ProductDisplayPage = () => {
     imageContainer.current.scrollLeft -= 100;
   };
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <section className="container mx-auto mt-4 p-4 grid lg:grid-cols-2">
@@ -127,16 +128,35 @@ const ProductDisplayPage = () => {
         <p className="">{data.unit}</p>
         <Divider />
         <div>
-          <p className="">Price</p>
-          <div className="border border-green-600 px-4 py-2 rounded bg-green-50 w-fit">
-            <p className="font-semibold text-lg lg:text-xl">
-              {DisplayPriceInRupees(data.price)}
-            </p>
+          <p className="font-semibold">Price</p>
+          <div className="flex items-center gap-2 lg:gap-4">
+            <div className="border border-green-600 px-4 py-1 lg:py-2 rounded bg-green-50 w-fit">
+              <p className="font-semibold text-lg lg:text-xl">
+                {DisplayPriceInRupees(
+                  pricewithDiscount(data.price, data.discount)
+                )}
+              </p>
+            </div>
+            {
+              data.discount > 0 && (
+                <p className="text-lg font-semibold text-gray-500 line-through">
+                  {DisplayPriceInRupees(data.price)}
+                </p>
+              )
+            }
+            
+            {
+              data.discount > 0 && (
+                <p className=" font-bold text-green-600 text-lg lg:text-2xl">{data.discount}% <span className="text-base text-neutral-500">Discount</span></p>
+              )
+            }
           </div>
         </div>
 
         {data.stock === 0 ? (
-          <p className="text-lg text-red-500">Out of Stock</p>
+          <p className="text-lg font-semibold my-2 text-red-500">
+            Out of Stock
+          </p>
         ) : (
           <button className="my-4 px-4 py-1 bg-green-700 hover:bg-green-700 text-white rounded shadow-md">
             Add

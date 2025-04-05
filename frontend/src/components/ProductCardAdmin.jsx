@@ -136,6 +136,6 @@ const ProductCardAdmin = ({ data, fetchProductData }) => {
 
 export default ProductCardAdmin;
 
-// 3rd video khtm ho gyi he and ui update karna baki he and usme product wala ui update ho gaya he thoda search bar wala and neeche wala jo bar he uska update karna baki he
 
-//cleaning essentias tak product upload ho cuhke hai next coldrink and juices upload karna hai
+// video 5:18 ghante ki ho gyi he aur abhi tak hamne edit aur delete the feature add kar diya he product ke liye
+// ab ham aage product ka liye kaam karenge

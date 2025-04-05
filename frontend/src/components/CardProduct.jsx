@@ -2,16 +2,17 @@ import React from "react";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { Link } from "react-router-dom";
 import { valideURLConvert } from "../utils/validURLConvert";
+import { pricewithDiscount } from "../utils/PriceWithDiscount";
 
 const CardProduct = ({ data }) => {
   const url = `/product/${valideURLConvert(data.name)}-${data._id}`;
   return (
     <Link
       to={url}
-      className="border rounded-lg shadow-md my-1 bg-white transition-all duration-300 transform hover:scale-102 hover:shadow-lg flex flex-col p-2 lg:p-3 gap-2 w-40 lg:min-w-44"
+      className="relative border rounded-lg shadow-md my-1 bg-white transition-all duration-300 transform hover:scale-102 hover:shadow-lg flex flex-col p-2 lg:p-3 gap-2 w-40 lg:min-w-44"
     >
       {/* Image Container */}
-      <div className="min-h-24 max-h-24 lg:max-h-32 rounded overflow-hidden">
+      <div className="min-h-24 max-h-24 lg:max-h-32 rounded overflow-hidden flex items-center justify-center">
         <img
           src={data.image[0]}
           className="w-full h-full object-scale-down"
@@ -19,26 +20,48 @@ const CardProduct = ({ data }) => {
         />
       </div>
 
+      {/* Out of Stock Message (moved above name) */}
+      {data.stock <= 0 && (
+        <span className="text-red-600 text-sm font-semibold px-2 lg:px-0">
+          Out of Stock
+        </span>
+      )}
+
       {/* Product Name */}
       <div className="px-2 lg:px-0 font-medium text-sm lg:text-base text-ellipsis line-clamp-2 text-gray-800">
         {data.name}
       </div>
 
-      {/* Product Unit */}
-      <div className="w-fit lg:px-0 px-2 text-xs lg:text-sm text-gray-600">
-        {data.unit}
+      {/* Unit + Discount Badge */}
+      <div className="px-2 lg:px-0 flex items-center justify-between">
+        <div className="text-xs lg:text-sm text-gray-600">{data.unit}</div>
+        {data.discount > 0 && (
+          <div className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-600 font-medium">
+            {data.discount}% Off
+          </div>
+        )}
       </div>
 
-      {/* Price & Add Button Section */}
-      <div className="px-2 lg:px-0 flex items-center justify-between gap-1 lg:gap-2 text-xs lg:text-sm">
+      {/* Price & Add Button */}
+      <div className="px-2 lg:px-0 flex items-center justify-between gap-2 text-xs lg:text-sm">
         {/* Price */}
-        <div className="font-semibold text-black text-sm lg:text-base">
-          {DisplayPriceInRupees(data.price)}
+        <div className="flex flex-col">
+          <span className="font-semibold text-black text-sm lg:text-base">
+            {DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}
+          </span>
+          {data.discount > 0 && (
+            <span className="text-gray-500 line-through text-xs">
+              {DisplayPriceInRupees(data.price)}
+            </span>
+          )}
         </div>
+
         {/* Add Button */}
-        <button className="bg-green-600 hover:bg-green-700 text-white px-2 lg:px-3 py-1 rounded-md shadow-md transition-all duration-300 transform hover:scale-102">
-          Add
-        </button>
+        {data.stock > 0 && (
+          <button className="bg-green-600 hover:bg-green-700 text-white px-2 lg:px-3 py-1 rounded-md shadow-md transition-all duration-300 transform hover:scale-102 text-xs lg:text-sm">
+            Add
+          </button>
+        )}
       </div>
 
       {/* Time Badge */}
