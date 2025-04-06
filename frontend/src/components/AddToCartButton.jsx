@@ -8,7 +8,7 @@ import Loading from "../components/Loading";
 import { useSelector } from "react-redux";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
-const AddToCartButton = ({ data }) => {
+const AddToCartButton = ({ data, variant = "default" }) => {
   const { fetchCartItem, updateCartItem, deleteCartItem } = useGlobalContext();
   const [loading, setLoading] = useState(false);
   const cartItem = useSelector((state) => state.cartItem.cart);
@@ -18,7 +18,7 @@ const AddToCartButton = ({ data }) => {
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent the click event from propagating to the Link component
+    e.stopPropagation();
     try {
       setLoading(true);
       const response = await Axios({
@@ -78,38 +78,48 @@ const AddToCartButton = ({ data }) => {
   };
 
   return (
-    <div className="w-full h-[40px] mt-2">
+    <div className="w-full h-full">
       {isAvailableCart ? (
-        <div className="flex items-center justify-between gap-0 bg-green-100 p-1 rounded-md shadow-sm h-full">
+        <div
+          className={`flex items-center justify-between gap-1 bg-green-100 px-3 py-0 rounded-md shadow-sm h-full
+          ${variant === "card" ? "w-[70px]" : "w-full"}`}
+        >
           <button
             onClick={decreaseQty}
-            className="bg-green-600 hover:bg-green-700 text-white w-6 h-6 flex items-center justify-center rounded-full transition duration-200"
+            className={`bg-green-600 -ml-[10px] hover:bg-green-700 text-white flex items-center justify-center rounded-full transition duration-200
+              ${variant === "card" ? "w-5 h-5 aspect-square" : "w-8 h-8"}
+`}
           >
-            <FaMinus size={10} />
+            <FaMinus size={variant === "card" ? 12 : 14} />
           </button>
-          <span className="text-sm font-semibold text-gray-800 min-w-[24px] text-center">
+          <span
+            className={`font-semibold text-gray-800 text-center ${
+              variant === "card"
+                ? "text-xs min-w-[20px]"
+                : "text-sm min-w-[24px]"
+            }`}
+          >
             {qty}
           </span>
           <button
             onClick={increaseQty}
-            className="bg-green-600 hover:bg-green-700 text-white w-6 h-6 flex items-center justify-center rounded-full transition duration-200"
+            className={`bg-green-600 hover:bg-green-700 text-white flex items-center justify-center rounded-full transition duration-200
+              ${variant === "card" ? "w-5 h-5 aspect-square" : "w-8 h-8"}
+`}
           >
-            <FaPlus size={10} />
+            <FaPlus size={variant === "card" ? 12 : 12} />
           </button>
         </div>
       ) : (
         <button
           onClick={handleAddToCart}
-          className="bg-green-600 relative hover:bg-green-700 text-white px-4 m-4 py-1 rounded-md shadow-md transition-all duration-300 transform hover:scale-[1.03] text-sm flex justify-center items-center"
+          className="bg-green-600 hover:bg-green-700 text-white w-full h-full rounded-md shadow-md transition-all duration-300 transform hover:scale-105 text-sm flex justify-center items-center"
         >
           {loading ? <Loading /> : "Add"}
         </button>
       )}
     </div>
   );
-  
 };
 
 export default AddToCartButton;
-
-// Circle wali loading daalna he add to cart wali button me jab product upload karte he tab

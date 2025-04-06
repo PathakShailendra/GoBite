@@ -10,6 +10,7 @@ import image1 from "../assets/minute_delivery.png";
 import image2 from "../assets/Best_Prices_Offers.png";
 import image3 from "../assets/Wide_Assortment.png";
 import { pricewithDiscount } from "../utils/PriceWithDiscount";
+import AddToCartButton from "../components/AddToCartButton";
 const ProductDisplayPage = () => {
   const params = useParams();
   let productId = params?.product?.split("-")?.slice(-1)[0];
@@ -205,9 +206,12 @@ const ProductDisplayPage = () => {
             Out of Stock
           </p>
         ) : (
-          <button className="my-4 px-6 py-2 bg-green-700 hover:bg-green-800 text-white rounded shadow-md transition-all duration-300">
-            Add to Cart
-          </button>
+          // <button className="my-4 px-6 py-2 bg-green-700 hover:bg-green-800 text-white rounded shadow-md transition-all duration-300">
+          //   Add to Cart
+          // </button>
+          <div className="h-12 w-32 mt-4">
+            <AddToCartButton data={data} />
+          </div>
         )}
 
         {/* Why shop from GoBite */}

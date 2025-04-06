@@ -12,10 +12,7 @@ import AddToCartButton from "./AddToCartButton";
 
 const CardProduct = ({ data }) => {
   const url = `/product/${valideURLConvert(data.name)}-${data._id}`;
-  const [loading,setLoading] = useState(false)
-
-
-
+  const [loading, setLoading] = useState(false);
 
   return (
     <Link
@@ -69,7 +66,9 @@ const CardProduct = ({ data }) => {
 
         {/* Add Button */}
         {data.stock > 0 && (
-          <AddToCartButton data={data} />
+          <div className="h-8 w-16">
+            <AddToCartButton data={data} variant="card" />
+          </div>
         )}
       </div>
 
