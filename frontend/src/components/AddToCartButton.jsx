@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
 const AddToCartButton = ({ data }) => {
-  const { fetchCartItem, updateCartItem, deleteCartItem} = useGlobalContext();
+  const { fetchCartItem, updateCartItem, deleteCartItem } = useGlobalContext();
   const [loading, setLoading] = useState(false);
   const cartItem = useSelector((state) => state.cartItem.cart);
   const [isAvailableCart, setIsAvailableCart] = useState(false);
@@ -78,33 +78,36 @@ const AddToCartButton = ({ data }) => {
   };
 
   return (
-    <div className="w-full max-w-[150px]">
+    <div className="w-full h-[40px] mt-2">
       {isAvailableCart ? (
-        <div className="flex">
+        <div className="flex items-center justify-between gap-0 bg-green-100 p-1 rounded-md shadow-sm h-full">
           <button
             onClick={decreaseQty}
-            className="bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded"
+            className="bg-green-600 hover:bg-green-700 text-white w-6 h-6 flex items-center justify-center rounded-full transition duration-200"
           >
-            <FaMinus />
+            <FaMinus size={10} />
           </button>
-          <p className="flex-1 w-full font-semibold">{qty}</p>
+          <span className="text-sm font-semibold text-gray-800 min-w-[24px] text-center">
+            {qty}
+          </span>
           <button
             onClick={increaseQty}
-            className="bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded"
+            className="bg-green-600 hover:bg-green-700 text-white w-6 h-6 flex items-center justify-center rounded-full transition duration-200"
           >
-            <FaPlus />
+            <FaPlus size={10} />
           </button>
         </div>
       ) : (
         <button
           onClick={handleAddToCart}
-          className="bg-green-600 relative hover:bg-green-700 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md shadow-md transition-all duration-300 transform hover:scale-102 text-xs lg:text-sm"
+          className="bg-green-600 relative hover:bg-green-700 text-white px-4 m-4 py-1 rounded-md shadow-md transition-all duration-300 transform hover:scale-[1.03] text-sm flex justify-center items-center"
         >
           {loading ? <Loading /> : "Add"}
         </button>
       )}
     </div>
   );
+  
 };
 
 export default AddToCartButton;
