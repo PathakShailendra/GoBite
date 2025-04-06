@@ -3,6 +3,8 @@ import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import { useDispatch } from "react-redux";
 import { handleAddItemCart } from "../store/cartProduct";
+import AxiosToastError from "../utils/AxiosToastError";
+import toast from "react-hot-toast";
 
 export const GlobalContext = createContext(null);
 
@@ -53,7 +55,7 @@ const GlobalProvider = ({ children }) => {
   const deleteCartItem = async(cartId)=>{
     try {
         const response = await Axios({
-          // ...SummaryApi.deleteCartItem,
+          ...SummaryApi.deleteCartItem,
           data : {
             _id : cartId
           }
@@ -69,6 +71,8 @@ const GlobalProvider = ({ children }) => {
     }
   }
 
+  
+
 
   useEffect(() => {
     fetchCartItem();
@@ -78,7 +82,8 @@ const GlobalProvider = ({ children }) => {
     <GlobalContext.Provider
       value={{
         fetchCartItem,
-        updateCartItem
+        updateCartItem,
+        deleteCartItem
       }}
     >
       {children}
