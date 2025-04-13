@@ -7,6 +7,7 @@ import { FaCaretRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { pricewithDiscount } from "../utils/PriceWithDiscount";
 import AddToCartButton from "./AddToCartButton";
+import imageEmpty from "../assets/empty_cart.webp";
 
 const DisplayCartItem = ({ close }) => {
   const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext();
@@ -34,68 +35,125 @@ const DisplayCartItem = ({ close }) => {
         <div className="min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] bg-blue-50 p-4 flex flex-col gap-4">
           {/* Display items */}
 
-          <div className="flex items-center justify-between px-5 py-3 bg-blue-100 text-blue-500 rounded-xl shadow-sm text-sm font-medium">
-            <p>Your total savings</p>
-            <p>{DisplayPriceInRupees(notDiscountTotalPrice - totalPrice)}</p>
-          </div>
+          {cartItem[0] ? (
+            <>
+              <div className="flex items-center justify-between px-5 py-3 bg-blue-100 text-blue-500 rounded-xl shadow-sm text-sm font-medium">
+                <p>Your total savings</p>
+                <p>
+                  {DisplayPriceInRupees(notDiscountTotalPrice - totalPrice)}
+                </p>
+              </div>
 
-          <div className="bg-white rounded-xl p-4 grid gap-6 overflow-auto shadow-md">
-            {cartItem[0] &&
-              cartItem.map((item, index) => {
-                return (
-                  <div
-                    key={item?._id + "cartItemDisplay"}
-                    className="flex items-center w-full gap-4"
-                  >
-                    <div className="w-16 h-16 min-w-16 min-h-16 bg-white border border-gray-200 rounded-md overflow-hidden flex items-center justify-center shadow-sm">
-                      <img
-                        src={item?.productId?.image[0]}
-                        className="object-contain h-full w-full"
-                      />
-                    </div>
+              <div className="bg-white rounded-xl p-4 grid gap-6 overflow-auto shadow-md">
+                {cartItem[0] &&
+                  cartItem.map((item, index) => {
+                    return (
+                      <div
+                        key={item?._id + "cartItemDisplay"}
+                        className="flex items-center w-full gap-4"
+                      >
+                        <div className="w-16 h-16 min-w-16 min-h-16 bg-white border border-gray-200 rounded-md overflow-hidden flex items-center justify-center shadow-sm">
+                          <img
+                            src={item?.productId?.image[0]}
+                            className="object-contain h-full w-full"
+                          />
+                        </div>
 
-                    <div className="w-full max-w-sm text-xs space-y-1">
-                      <p className="text-sm font-medium text-gray-800 line-clamp-2">
-                        {item?.productId?.name}
-                      </p>
-                      <p className="text-neutral-400 text-xs">
-                        {item?.productId?.unit}
-                      </p>
-                      <p className="font-semibold text-green-700">
-                        {DisplayPriceInRupees(
-                          pricewithDiscount(
-                            item?.productId?.price,
-                            item?.productId?.discount
-                          )
-                        )}
-                      </p>
-                    </div>
+                        <div className="w-full max-w-sm text-xs space-y-1">
+                          <p className="text-sm font-medium text-gray-800 line-clamp-2">
+                            {item?.productId?.name}
+                          </p>
+                          <p className="text-neutral-400 text-xs">
+                            {item?.productId?.unit}
+                          </p>
+                          <p className="font-semibold text-green-700">
+                            {DisplayPriceInRupees(
+                              pricewithDiscount(
+                                item?.productId?.price,
+                                item?.productId?.discount
+                              )
+                            )}
+                          </p>
+                        </div>
 
-                    <div className="h-10 ml-auto">
-                      <AddToCartButton
-                        variant={"card"}
-                        data={item?.productId}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
+                        <div className="h-10 ml-auto">
+                          <AddToCartButton
+                            variant={"card"}
+                            data={item?.productId}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+
+              <div className="bg-white p-3 sm:p-5 rounded-xl shadow-sm border w-full max-w-full">
+  <h3 className="font-semibold text-sm sm:text-lg mb-3 sm:mb-4 text-gray-700">Bill Details</h3>
+
+  <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
+    <p className="text-gray-600">Items Total</p>
+    <p className="flex items-center gap-1 sm:gap-2">
+      <span className="line-through text-neutral-400 text-xs sm:text-sm">
+        {DisplayPriceInRupees(notDiscountTotalPrice)}
+      </span>
+      <span className="font-medium text-gray-800 text-xs sm:text-sm">
+        {DisplayPriceInRupees(totalPrice)}
+      </span>
+    </p>
+  </div>
+
+  <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
+    <p className="text-gray-600">Quantity Total</p>
+    <p className="font-medium text-gray-800">{totalQty} item</p>
+  </div>
+
+  <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
+    <p className="text-gray-600">Delivery Charge</p>
+    <p className="font-medium text-green-600">Free</p>
+  </div>
+
+  <div className="border-t pt-2 sm:pt-3 mt-2 sm:mt-3 flex justify-between items-center font-semibold text-xs sm:text-base text-gray-800">
+    <p>Grand Total</p>
+    <p>{DisplayPriceInRupees(totalPrice)}</p>
+  </div>
+</div>
+
+            </>
+          ) : (
+            <>
+              <div className="bg-white flex flex-col justify-center items-center">
+                <img
+                  src={imageEmpty}
+                  className="w-full h-full object-scale-down"
+                />
+              </div>
+
+              <Link
+                onClick={close}
+                to={"/"}
+                className="mx-auto mt-4 block bg-green-600 px-6 py-3 text-white rounded-full text-sm font-medium shadow-md transition-all duration-300 hover:bg-green-700 hover:scale-[1.02]"
+              >
+                Shop Now
+              </Link>
+            </>
+          )}
         </div>
 
-        <div className="p-4">
-          <div className="bg-green-700 text-white rounded-lg px-6 py-3 flex items-center justify-between shadow-md">
-            <div className="text-lg font-semibold">
-              {DisplayPriceInRupees(totalPrice)}
+        {cartItem[0] && (
+          <div className="p-4">
+            <div className="bg-green-700 text-white rounded-lg px-6 py-3 flex items-center justify-between shadow-md">
+              <div className="text-lg font-semibold">
+                {DisplayPriceInRupees(totalPrice)}
+              </div>
+              <button className="bg-white flex items-center gap-2 text-green-700 font-medium px-5 py-2 rounded-md text-sm sm:text-base active:scale-[0.98] transition-all duration-200 cursor-pointer">
+                Proceed
+                <span>
+                  <FaCaretRight />
+                </span>
+              </button>
             </div>
-            <button className="bg-white flex items-center gap-2 text-green-700 font-medium px-5 py-2 rounded-md text-sm sm:text-base active:scale-[0.98] transition-all duration-200 cursor-pointer">
-              Proceed
-              <span>
-                <FaCaretRight />
-              </span>
-            </button>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
