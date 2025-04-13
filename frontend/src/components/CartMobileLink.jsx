@@ -13,7 +13,7 @@ const CartMobileLink = () => {
   return (
     <>
       {cartItem[0] && (
-        <div className="fixed bottom-2 w-full px-2 z-50">
+        <div className="sticky mb-2 w-full px-2 z-50">
           <div className="bg-green-600 text-white rounded-lg py-2 px-4 shadow-lg flex items-center justify-between gap-4 lg:hidden">
             <div className="flex items-center gap-3">
               <div className="bg-green-800 p-2 rounded-full flex items-center justify-center">
