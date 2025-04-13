@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import fetchUserDetails from "./utils/fetchUserDetails";
 import { setUserDetails } from "./store/userSlice";
 import { useDispatch } from "react-redux";
+
 import {
   setAllCategory,
   setAllSubCategory,
@@ -16,6 +17,7 @@ import SummaryApi from "./common/SummaryApi";
 import AxiosToastError from "./utils/AxiosToastError";
 import { handleAddItemCart } from "./store/cartProduct";
 import GlobalProvider from "./provider/GlobalProvider";
+import CartMobileLink from "./components/CartMobileLink";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -75,6 +77,8 @@ const App = () => {
       </main>
       <Footer />
       <Toaster />
+
+      <CartMobileLink />
     </GlobalProvider>
   );
 };

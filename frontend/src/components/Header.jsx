@@ -10,6 +10,8 @@ import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
 import UserMenu from "./UserMenu";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
+import { useGlobalContext } from "../provider/GlobalProvider";
+import DisplayCartItem from "./DisplayCartItem";
 
 const Header = () => {
   const [isMobile] = useMobile();
@@ -19,8 +21,10 @@ const Header = () => {
   const user = useSelector((state) => state?.user);
   const [openUserMenu, setopenUserMenu] = useState(false);
   const cartItem = useSelector((state) => state?.cartItem?.cart);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalQty, setTotalQty] = useState(0);
+  // const [totalPrice, setTotalPrice] = useState(0);
+  // const [totalQty, setTotalQty] = useState(0);
+  const { totalPrice, totalQty } = useGlobalContext();
+  const [ openCartSection, setOpenCartSection ] = useState(false);
 
   const redirectToLoginPage = () => {
     navigate("/login");
@@ -41,17 +45,17 @@ const Header = () => {
 
   //total items and total price
 
-  useEffect(() => {
-    const qty = cartItem.reduce((preve, curr) => {
-      return preve + curr.quantity;
-    }, 0);
-    setTotalQty(qty);
+  // useEffect(() => {
+  //   const qty = cartItem.reduce((preve, curr) => {
+  //     return preve + curr.quantity;
+  //   }, 0);
+  //   setTotalQty(qty);
 
-    const tPrice = cartItem.reduce((preve, curr) => {
-      return preve + curr.productId.price * curr.quantity;
-    }, 0);
-    setTotalPrice(tPrice);
-  }, [cartItem]);
+  //   const tPrice = cartItem.reduce((preve, curr) => {
+  //     return preve + curr.productId.price * curr.quantity;
+  //   }, 0);
+  //   setTotalPrice(tPrice);
+  // }, [cartItem]);
 
   return (
     <header className="h-24 lg:h-20 sticky lg:shadow-md top-0 z-40 flex justify-center flex-col gap-1 bg-white">
@@ -124,7 +128,10 @@ const Header = () => {
                   Login
                 </button>
               )}
-              <button className="flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-3 text-white rounded-lg">
+              <button
+                onClick={() => setOpenCartSection(true)}
+                className="flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-2 text-white rounded-lg"
+              >
                 {/* {add to cart icons} */}
                 <div className="animate-bounce">
                   <FaCartShopping size={28} />
@@ -148,6 +155,8 @@ const Header = () => {
       <div className="container mx-auto px-2 lg:hidden">
         <Search />
       </div>
+
+      {openCartSection && <DisplayCartItem close={() => setOpenCartSection(false)} />}
     </header>
   );
 };
