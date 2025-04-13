@@ -4,9 +4,15 @@ import { Link } from "react-router-dom";
 import { useGlobalContext } from "../provider/GlobalProvider";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { FaCaretRight } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { pricewithDiscount } from "../utils/PriceWithDiscount";
+import AddToCartButton from "./AddToCartButton";
 
 const DisplayCartItem = ({ close }) => {
   const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext();
+  const cartItem  = useSelector(state => state.cartItem.cart)
+  
+
   return (
     <section className="bg-neutral-900/70 fixed top-0 left-0 right-0 bottom-0 z-50">
       <div className="bg-white w-full max-w-sm min-h-screen max-h-screen ml-auto">
@@ -29,8 +35,45 @@ const DisplayCartItem = ({ close }) => {
           </button>
         </div>
 
-        <div className="min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] bg-blue-50 ">
+        <div className="min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] bg-blue-50 p-2 flex flex-col gap-4">
           {/* Display items */}
+
+          <div className="flex items-center justify-between px-4 py-2 bg-blue-100 text-blue-500 rounded-full">
+            <p>Your total savings</p>
+            <p>{DisplayPriceInRupees(notDiscountTotalPrice - totalPrice)}</p>
+          </div>
+
+          <div className="bg-white rounded-lg p-4 grid gap-5 overflow-auto">
+            {
+                cartItem[0] && (
+                    cartItem.map((item,index)=>{
+                        return(
+                            <div key={item?._id+"cartItemDisplay"} className='flex  w-full gap-4'>
+                                <div className='w-16 h-16 min-h-16 min-w-16 bg-red-500 border rounded'>
+                                    <img
+                                        src={item?.productId?.image[0]}
+                                        className='object-scale-down'
+                                    />
+                                </div>
+                                <div className='w-full max-w-sm text-xs'>
+                                    <p className='text-xs text-ellipsis line-clamp-2'>{item?.productId?.name}</p>
+                                    <p className='text-neutral-400'>{item?.productId?.unit}</p>
+                                    <p className='font-semibold'>{DisplayPriceInRupees(pricewithDiscount(item?.productId?.price,item?.productId?.discount))}</p>
+                                </div>
+                                <div className="h-10">
+                                    <AddToCartButton variant={"card"} data={item?.productId}/>
+                                </div>
+                            </div>
+                        )
+
+                    })
+                )
+            }
+          </div>
+
+
+
+
         </div>
 
         <div className="p-4">
