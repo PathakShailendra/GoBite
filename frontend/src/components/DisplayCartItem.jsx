@@ -1,6 +1,6 @@
 import React from "react";
 import { IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../provider/GlobalProvider";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { FaCaretRight } from "react-icons/fa";
@@ -8,10 +8,21 @@ import { useSelector } from "react-redux";
 import { pricewithDiscount } from "../utils/PriceWithDiscount";
 import AddToCartButton from "./AddToCartButton";
 import imageEmpty from "../assets/empty_cart.webp";
+import toast from "react-hot-toast";
 
 const DisplayCartItem = ({ close }) => {
   const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext();
   const cartItem = useSelector((state) => state.cartItem.cart);
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  // console.log(user)
+  const redirectToCheckoutPage = () => {
+    if (user?._id) {
+      navigate("/checkout");
+      return;
+    }
+    toast.error
+  };
 
   return (
     <section className="bg-neutral-900/70 fixed top-0 left-0 right-0 bottom-0 z-50">
@@ -88,36 +99,37 @@ const DisplayCartItem = ({ close }) => {
               </div>
 
               <div className="bg-white p-3 sm:p-5 rounded-xl shadow-sm border w-full max-w-full">
-  <h3 className="font-semibold text-sm sm:text-lg mb-3 sm:mb-4 text-gray-700">Bill Details</h3>
+                <h3 className="font-semibold text-sm sm:text-lg mb-3 sm:mb-4 text-gray-700">
+                  Bill Details
+                </h3>
 
-  <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
-    <p className="text-gray-600">Items Total</p>
-    <p className="flex items-center gap-1 sm:gap-2">
-      <span className="line-through text-neutral-400 text-xs sm:text-sm">
-        {DisplayPriceInRupees(notDiscountTotalPrice)}
-      </span>
-      <span className="font-medium text-gray-800 text-xs sm:text-sm">
-        {DisplayPriceInRupees(totalPrice)}
-      </span>
-    </p>
-  </div>
+                <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
+                  <p className="text-gray-600">Items Total</p>
+                  <p className="flex items-center gap-1 sm:gap-2">
+                    <span className="line-through text-neutral-400 text-xs sm:text-sm">
+                      {DisplayPriceInRupees(notDiscountTotalPrice)}
+                    </span>
+                    <span className="font-medium text-gray-800 text-xs sm:text-sm">
+                      {DisplayPriceInRupees(totalPrice)}
+                    </span>
+                  </p>
+                </div>
 
-  <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
-    <p className="text-gray-600">Quantity Total</p>
-    <p className="font-medium text-gray-800">{totalQty} item</p>
-  </div>
+                <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
+                  <p className="text-gray-600">Quantity Total</p>
+                  <p className="font-medium text-gray-800">{totalQty} item</p>
+                </div>
 
-  <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
-    <p className="text-gray-600">Delivery Charge</p>
-    <p className="font-medium text-green-600">Free</p>
-  </div>
+                <div className="flex justify-between items-center mb-2 sm:mb-3 text-xs sm:text-base">
+                  <p className="text-gray-600">Delivery Charge</p>
+                  <p className="font-medium text-green-600">Free</p>
+                </div>
 
-  <div className="border-t pt-2 sm:pt-3 mt-2 sm:mt-3 flex justify-between items-center font-semibold text-xs sm:text-base text-gray-800">
-    <p>Grand Total</p>
-    <p>{DisplayPriceInRupees(totalPrice)}</p>
-  </div>
-</div>
-
+                <div className="border-t pt-2 sm:pt-3 mt-2 sm:mt-3 flex justify-between items-center font-semibold text-xs sm:text-base text-gray-800">
+                  <p>Grand Total</p>
+                  <p>{DisplayPriceInRupees(totalPrice)}</p>
+                </div>
+              </div>
             </>
           ) : (
             <>
@@ -145,7 +157,10 @@ const DisplayCartItem = ({ close }) => {
               <div className="text-lg font-semibold">
                 {DisplayPriceInRupees(totalPrice)}
               </div>
-              <button className="bg-white flex items-center gap-2 text-green-700 font-medium px-5 py-2 rounded-md text-sm sm:text-base active:scale-[0.98] transition-all duration-200 cursor-pointer">
+              <button
+                onClick={redirectToCheckoutPage}
+                className="bg-white flex items-center gap-2 text-green-700 font-medium px-5 py-2 rounded-md text-sm sm:text-base active:scale-[0.98] transition-all duration-200 cursor-pointer"
+              >
                 Proceed
                 <span>
                   <FaCaretRight />
