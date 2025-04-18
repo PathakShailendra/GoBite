@@ -19,6 +19,9 @@ const DisplayCartItem = ({ close }) => {
   const redirectToCheckoutPage = () => {
     if (user?._id) {
       navigate("/checkout");
+      if(close){
+        close()
+      }
       return;
     }
     toast.error
