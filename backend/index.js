@@ -11,6 +11,7 @@ import uploadRoutes from "./routes/upload.routes.js"
 import subCategoryRoutes from "./routes/subCategory.routes.js"
 import productRoutes from "./routes/product.routes.js"
 import cartRouter from './routes/cart.routes.js'
+import addressRouter from './routes/address.routes.js'
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use('/api/file', uploadRoutes)
 app.use('/api/subcategory', subCategoryRoutes)
 app.use('/api/product', productRoutes)
 app.use('/api/cart', cartRouter)
+app.use("/api/address",addressRouter)
 
 connectDB().then(() => {  
 app.listen(process.env.PORT, () => {
