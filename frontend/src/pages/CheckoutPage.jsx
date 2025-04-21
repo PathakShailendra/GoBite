@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees'
-import { useGlobalContext } from '../provider/GlobalProvider'
+import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
+import { useGlobalContext } from "../provider/GlobalProvider";
 import AddAddress from "../components/AddAddress";
+import { useSelector } from "react-redux";
 
 const CheckoutPage = () => {
-  const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext()
-  const [openAddress, setOpenAddress] = useState(false)
+  const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext();
+  const [openAddress, setOpenAddress] = useState(false);
+  const addressList = useSelector((state) => state.addresses.addressList);
+  const [selectAddress, setSelectAddress] = useState(0)
 
   return (
     <section className="bg-blue-50 mt-7 lg:mt-0 min-h-screen">
@@ -13,11 +16,44 @@ const CheckoutPage = () => {
         {/* Left: Address Section */}
         <div className="w-full lg:w-2/3">
           <h3 className="text-lg font-semibold mb-2">Choose your address</h3>
-          <div
-            onClick={() => setOpenAddress(true)}
-            className="h-16 bg-blue-50 border-2 border-dashed flex justify-center items-center cursor-pointer hover:bg-blue-100 transition"
-          >
-            Add Address
+
+          <div className="bg-white p-2 grid gap-4">
+            {addressList.map((address, index) => {
+              return (
+                <label
+                  htmlFor={"address" + index}
+                  className={!address.status && "hidden"}
+                  key={index+"checkout"}
+                >
+                  <div className="border rounded p-3 flex gap-3 hover:bg-blue-50">
+                    <div>
+                      <input
+                        id={"address" + index}
+                        type="radio"
+                        value={index}
+                        onChange={(e) => setSelectAddress(e.target.value)}
+                        name="address"
+                      />
+                    </div>
+                    <div>
+                      <p>{address.address_line}</p>
+                      <p>{address.city}</p>
+                      <p>{address.state}</p>
+                      <p>
+                        {address.country} - {address.pincode}
+                      </p>
+                      <p>{address.mobile}</p>
+                    </div>
+                  </div>
+                </label>
+              );
+            })}
+            <div
+              onClick={() => setOpenAddress(true)}
+              className="h-16 bg-blue-50 border-2 border-dashed flex justify-center items-center cursor-pointer hover:bg-blue-100 transition"
+            >
+              Add Address
+            </div>
           </div>
         </div>
 
@@ -34,13 +70,17 @@ const CheckoutPage = () => {
                 <span className="line-through text-neutral-400 text-sm">
                   {DisplayPriceInRupees(notDiscountTotalPrice)}
                 </span>
-                <span className="font-medium">{DisplayPriceInRupees(totalPrice)}</span>
+                <span className="font-medium">
+                  {DisplayPriceInRupees(totalPrice)}
+                </span>
               </p>
             </div>
 
             <div className="flex justify-between text-sm">
               <p>Quantity total</p>
-              <p>{totalQty} item{totalQty > 1 ? "s" : ""}</p>
+              <p>
+                {totalQty} item{totalQty > 1 ? "s" : ""}
+              </p>
             </div>
 
             <div className="flex justify-between text-sm">
