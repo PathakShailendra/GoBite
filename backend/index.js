@@ -26,11 +26,11 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(morgan());
-app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
-  })
-);
+// app.use(
+//   helmet({
+//     crossOriginResourcePolicy: false,
+//   })
+// );
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello World" });
