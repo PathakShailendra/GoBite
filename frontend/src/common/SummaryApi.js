@@ -1,4 +1,4 @@
-export const baseURL = "http://localhost:7000"
+export const baseURL = "https://gobite-backend-kbjl.onrender.com/"
 
 const SummaryApi = {
     register : {
