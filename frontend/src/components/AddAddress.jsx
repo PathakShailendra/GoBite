@@ -1,12 +1,43 @@
 import React from "react";
 import { IoClose } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-// import { useForm, SubmitHandler } from "react-hook-form";
+import SummaryApi from "../common/SummaryApi";
+import Axios from '../utils/Axios'
+import AxiosToastError from '../utils/AxiosToastError'
+import toast from "react-hot-toast";
+
 
 const AddAddress = ({close}) => {
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = async (data) => {
     console.log("data", data);
+
+    try {
+      const response = await Axios({
+          ...SummaryApi.createAddress,
+          data : {
+              address_line :data.addressline,
+              city : data.city,
+              state : data.state,
+              country : data.country,
+              pincode : data.pincode,
+              mobile : data.mobile
+          }
+      })
+
+      const { data : responseData } = response
+      
+      if(responseData.success){
+          toast.success(responseData.message)
+          if(close){
+              close()
+              reset()
+              // fetchAddress()
+          }
+      }
+  } catch (error) {
+      AxiosToastError(error)
+  }
   };
 
   return (
